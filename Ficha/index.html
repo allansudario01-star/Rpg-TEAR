@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T.E.A.R. - Ficha de Personagem</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">T.E.A.R.</h1>
+            <p style="color: var(--text-secondary); font-size: 1.2rem; margin-top: 20px;">Ficha de Personagem</p>
+        </header>
+
+        <!-- Status Principais -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-chart-line"></i> Status Principais</h2>
+            </div>
+            <div class="status-grid">
+                <!-- Vida -->
+                <div class="status-card" id="health-card">
+                    <div class="status-name">VIDA</div>
+                    <div class="status-value" id="health-value">9</div>
+                    <div class="status-formula">CONST × 3 + FOR + NÍVEL × 5</div>
+                    
+                    <div class="health-bar-container">
+                        <div class="health-bar" id="health-bar" style="width: 100%"></div>
+                        <div class="health-text" id="health-text">9/9</div>
+                    </div>
+                    
+                    <div class="health-controls">
+                        <div class="health-input-container">
+                            <input type="number" id="health-change-input" value="1" min="1" max="100">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Valor</div>
+                        </div>
+                        <div class="health-buttons">
+                            <button class="health-btn" onclick="changeHealth('add')">+</button>
+                            <button class="health-btn" onclick="changeHealth('sub')">-</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="number" id="current-health" value="9" min="0" style="width: 120px; text-align: center; padding: 8px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Vida Atual</div>
+                    </div>
+                </div>
+                
+                <!-- Essência -->
+                <div class="status-card" id="essence-card">
+                    <div class="status-name">Ecos de Fios</div>
+                    <div class="status-value" id="essence-value">3</div>
+                    <div class="status-formula">LIN × 2 + ESP + BÔNUS</div>
+                    
+                    <div class="health-bar-container">
+                        <div class="health-bar" id="essence-bar" style="width: 100%"></div>
+                        <div class="health-text" id="essence-text">3/3</div>
+                    </div>
+                    
+                    <div class="health-controls">
+                        <div class="health-input-container">
+                            <input type="number" id="essence-change-input" value="1" min="1" max="100">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Valor</div>
+                        </div>
+                        <div class="health-buttons">
+                            <button class="health-btn" onclick="changeEssence('add')">+</button>
+                            <button class="health-btn" onclick="changeEssence('sub')">-</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="number" id="current-essence" value="3" min="0" style="width: 120px; text-align: center; padding: 8px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Ecos de Fios Atual</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="number" id="essence-bonus" value="0" style="width: 80px; text-align: center; padding: 5px; background: var(--secondary); border: 1px solid var(--accent-blue); color: var(--text); border-radius: 5px;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Bônus</div>
+                    </div>
+                </div>
+                
+                <!-- Defesa -->
+                <div class="status-card">
+                    <div class="status-name">DEFESA</div>
+                    <div class="status-value" id="defense-value">11</div>
+                    <div class="status-formula">10 + DES/3 + ARM + BÔNUS</div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                            <div>
+                                <input type="number" id="armor" value="0" style="width: 80px; text-align: center; padding: 8px; background: var(--secondary); border: 1px solid var(--accent-blue); color: var(--text); border-radius: 5px;">
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Armadura</div>
+                            </div>
+                            <div>
+                                <input type="number" id="defense-bonus" value="0" style="width: 80px; text-align: center; padding: 8px; background: var(--secondary); border: 1px solid var(--accent-blue); color: var(--text); border-radius: 5px;">
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Bônus</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resistência -->
+                <div class="status-card">
+                    <div class="status-name">RESISTÊNCIA</div>
+                    <div class="status-value" id="resistance-value">11</div>
+                    <div class="status-formula">10 + ESP/2 + LIN/5 + BÔNUS</div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <input type="number" id="resistance-bonus" value="0" style="width: 80px; text-align: center; padding: 8px; background: var(--secondary); border: 1px solid var(--accent-blue); color: var(--text); border-radius: 5px;">
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">Bônus</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Iniciativa -->
+            <div style="margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="color: var(--accent); font-size: 1.2rem; font-weight: bold;">INICIATIVA</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">d100 + (DES + INT) ÷ 4</div>
+                    </div>
+                    <div style="font-size: 2rem; font-weight: bold; color: var(--accent);" id="initiative-value">d100 + 0.5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações Básicas -->
+        <div class="grid grid-4">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-user"></i> Jogador</h2>
+                <input type="text" id="player-name" placeholder="Nome do Jogador" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); margin-top: 15px;">
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-mask"></i> Personagem</h2>
+                <input type="text" id="character-name" placeholder="Nome do Personagem" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); margin-top: 15px;">
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-layer-group"></i> Nível (Nós)</h2>
+                <input type="number" id="level" value="1" min="1" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); margin-top: 15px; font-size: 2rem; text-align: center;">
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-coins"></i> Dinheiro</h2>
+                <input type="number" id="money" value="0" min="0" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); margin-top: 15px; font-size: 2rem; text-align: center;">
+            </div>
+        </div>
+
+        <!-- Atributos Principais -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-cogs"></i> Atributos Principais</h2>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">Todos começam em 1, máximo 50</div>
+            </div>
+            <div class="attribute-grid">
+                <!-- Força -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">FORÇA</div>
+                        <input type="number" class="modifier-input" id="strength-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="strength" value="1" min="1" max="50" class="attr-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+                
+                <!-- Constituição -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">CONSTITUIÇÃO</div>
+                        <input type="number" class="modifier-input" id="constitution-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="constitution" value="1" min="1" max="50" class="attr-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+                
+                <!-- Destreza -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">DESTREZA</div>
+                        <input type="number" class="modifier-input" id="dexterity-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="dexterity" value="1" min="1" max="50" class="attr-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+                
+                <!-- Inteligência -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">INTELIGÊNCIA</div>
+                        <input type="number" class="modifier-input" id="intelligence-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="intelligence" value="1" min="1" max="50" class="attr-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+                
+                <!-- Espírito -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">ESPÍRITO</div>
+                        <input type="number" class="modifier-input" id="spirit-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="spirit" value="1" min="1" max="50" class="attr-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+                
+                <!-- Linecinese -->
+                <div class="attribute-card">
+                    <div class="attribute-header">
+                        <div class="attribute-name">LINECINESE</div>
+                        <input type="number" class="modifier-input" id="linecinese-mod" value="0" placeholder="Mod">
+                    </div>
+                    <div class="attribute-value">
+                        <input type="number" id="linecinese" value="1" min="1" max="50" class="attr-input lin-main-input">
+                    </div>
+                    <div class="attribute-limit">1 - 50</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sub-atributos Linecinese -->
+        <div class="card" id="lin-subattributes-section" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-network-wired"></i> Sub-atributos Linecinese</h2>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Total disponível: <span id="lin-points-available" style="color: var(--accent); font-weight: bold;">1</span>
+                </div>
+            </div>
+            
+            <!-- Afinidade -->
+            <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,51,102,0.1); border-radius: 8px; border: 1px solid var(--accent);">
+                <div style="color: var(--accent); margin-bottom: 10px; font-weight: bold;">AFINIDADE</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px;">
+                    Escolha um atributo para +5, seu contra-atributo terá -5
+                </div>
+                <select id="lin-affinity" class="other-select">
+                    <option value="">Selecione uma afinidade</option>
+                    <option value="1">Atributo 1 (+5) vs Atributo 2 (-5)</option>
+                    <option value="2">Atributo 2 (+5) vs Atributo 3 (-5)</option>
+                    <option value="3">Atributo 3 (+5) vs Atributo 4 (-5)</option>
+                    <option value="4">Atributo 4 (+5) vs Atributo 1 (-5)</option>
+                </select>
+            </div>
+            
+            <!-- Sub-atributos -->
+            <div class="lin-grid">
+                <!-- Atributo 1 -->
+                <div class="lin-card">
+                    <div class="lin-header">
+                        <div class="lin-name">ATRIBUTO 1</div>
+                        <input type="number" class="modifier-input lin-mod-input" id="lin-mod-1" value="0" placeholder="Mod" data-lin="1">
+                    </div>
+                    <div class="lin-value">
+                        <input type="number" id="lin-attr-1" value="0" min="0" max="50" class="lin-attr-input">
+                    </div>
+                    <div class="lin-grade">Grau: <span id="lin-grade-1" style="color: var(--accent);">I</span></div>
+                </div>
+                
+                <!-- Atributo 2 -->
+                <div class="lin-card">
+                    <div class="lin-header">
+                        <div class="lin-name">ATRIBUTO 2</div>
+                        <input type="number" class="modifier-input lin-mod-input" id="lin-mod-2" value="0" placeholder="Mod" data-lin="2">
+                    </div>
+                    <div class="lin-value">
+                        <input type="number" id="lin-attr-2" value="0" min="0" max="50" class="lin-attr-input">
+                    </div>
+                    <div class="lin-grade">Grau: <span id="lin-grade-2" style="color: var(--accent);">I</span></div>
+                </div>
+                
+                <!-- Atributo 3 -->
+                <div class="lin-card">
+                    <div class="lin-header">
+                        <div class="lin-name">ATRIBUTO 3</div>
+                        <input type="number" class="modifier-input lin-mod-input" id="lin-mod-3" value="0" placeholder="Mod" data-lin="3">
+                    </div>
+                    <div class="lin-value">
+                        <input type="number" id="lin-attr-3" value="0" min="0" max="50" class="lin-attr-input">
+                    </div>
+                    <div class="lin-grade">Grau: <span id="lin-grade-3" style="color: var(--accent);">I</span></div>
+                </div>
+                
+                <!-- Atributo 4 -->
+                <div class="lin-card">
+                    <div class="lin-header">
+                        <div class="lin-name">ATRIBUTO 4</div>
+                        <input type="number" class="modifier-input lin-mod-input" id="lin-mod-4" value="0" placeholder="Mod" data-lin="4">
+                    </div>
+                    <div class="lin-value">
+                        <input type="number" id="lin-attr-4" value="0" min="0" max="50" class="lin-attr-input">
+                    </div>
+                    <div class="lin-grade">Grau: <span id="lin-grade-4" style="color: var(--accent);">I</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado do Fio -->
+        <div class="grid grid-2">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-thread"></i> Estado do Fio</h2>
+                <select id="thread-state" class="other-select">
+                    <option value="rest">Em Repouso (Padrão)</option>
+                    <option value="tuned">Afinado</option>
+                    <option value="tense">Tensionado</option>
+                    <option value="untuned">Desafinado</option>
+                </select>
+                
+                <div id="tense-state-container" style="display: none; margin-top: 15px;">
+                    <div style="color: var(--text-secondary); margin-bottom: 10px;">Estado do Fio Tensionado:</div>
+                    <select id="tense-state" class="other-select">
+                        <option value="stable">Estável</option>
+                        <option value="unstable">Instável</option>
+                        <option value="broken">Rompido</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Profissão, Teia e Antecedente -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-id-card"></i> Identidade</h2>
+                <div style="margin-top: 15px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: var(--text-secondary); margin-bottom: 5px;">Profissão</div>
+                        <select id="profession" class="other-select">
+                            <option value="">Selecione</option>
+                            <option value="1">Tecelão Condutor</option>
+                            <option value="2">Reforjador de Tramas</option>
+                            <option value="3">Extensor do Horizonte</option>
+                            <option value="4">Ruptor do Nó</option>
+                            <option value="5">Tecelão Ressonante</option>
+                            <option value="6">Tecelão Ascendente</option>
+                            <option value="7">Tecelão do Silêncio</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: var(--text-secondary); margin-bottom: 5px;">Teia</div>
+                        <input type="text" placeholder="Teia da Profissão" class="item-name-input" class="text-input" id="web" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); border-radius: 5px; color: var(--text); margin-left: 10px;">
+                    </div>
+                    
+                    <div>
+                        <div style="color: var(--text-secondary); margin-bottom: 5px;">Antecedente</div>
+                        <select id="background" class="other-select">
+                            <option value="">Selecione</option>
+                            <option value="1">Centro da Teia</option>
+                            <option value="2">Periferia Desfiada</option>
+                            <option value="3">Toque do Abismo</option>
+                            <option value="4">Sobrevivente do Ruído</option>
+                            <option value="5">Iluminado pelo Tear</option>
+                            <option value="6">Aprendiz Formal</option>
+                            <option value="7">Despertado pela Dor</option>
+                            <option value="8">Caçador de Anomalias</option>
+                            <option value="9">Duelista do Véu</option>
+                            <option value="10">Atirador Fantasma</option>
+                            <option value="11">Artífice Emocional</option>
+                            <option value="12">Embaraçador da Realidade</option>
+                            <option value="13">Guardião do Nó</option>
+                            <option value="14">Presença Silenciosa</option>
+                            <option value="15">Estrategista Tático</option> 
+                            <option value="16">Erudito das Fronteiras</option>
+                            <option value="17">Cirurgião do Fio</option>
+                            <option value="18">Artesão do Tecido</option>
+                            <option value="19">Rastreador de Corrupção</option>
+                            <option value="20">Viajante Intersticial</option>
+                            <option value="21">Líder Orgânico</option>
+                            <option value="22">Tecelão Urbano</option>
+                            <option value="23">Marcado pelo Colapso</option>
+                            <option value="24">Visionário do Tear</option>
+                            <option value="25">Herdeiro de Sangue</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Peculiaridades -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-star"></i> Peculiaridades</h2>
+            </div>
+            <div class="peculiarity-list" id="peculiarities-container">
+                <!-- As peculiaridades serão geradas por JavaScript -->
+            </div>
+        </div>
+
+        <!-- Reputação -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-handshake"></i> Reputação</h2>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">-100 a +100</div>
+            </div>
+            
+            <!-- Sliders de reputação -->
+            <div class="reputation-slider-container">
+                <div class="reputation-name">
+                    <span>Tecelões</span>
+                    <span id="rep-weavers-value">0</span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="reputation-slider" id="rep-weavers">
+            </div>
+            
+            <div class="reputation-slider-container">
+                <div class="reputation-name">
+                    <span>Igreja Tear</span>
+                    <span id="rep-church-value">0</span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="reputation-slider" id="rep-church">
+            </div>
+            
+            <div class="reputation-slider-container">
+                <div class="reputation-name">
+                    <span>Periferia</span>
+                    <span id="rep-periphery-value">0</span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="reputation-slider" id="rep-periphery">
+            </div>
+            
+            <div class="reputation-slider-container">
+                <div class="reputation-name">
+                    <span>Caçadores</span>
+                    <span id="rep-hunters-value">0</span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="reputation-slider" id="rep-hunters">
+            </div>
+            
+            <div class="reputation-slider-container">
+                <div class="reputation-name">
+                    <span>Sobreviventes</span>
+                    <span id="rep-survivors-value">0</span>
+                </div>
+                <input type="range" min="-100" max="100" value="0" class="reputation-slider" id="rep-survivors">
+            </div>
+            
+            <!-- Reputação Geral -->
+            <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid var(--border); text-align: center;">
+                <div style="color: var(--accent); font-size: 1.2rem; margin-bottom: 10px;">REPUTAÇÃO GERAL</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: var(--accent);" id="general-reputation">0</div>
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">Soma de todas as reputações</div>
+            </div>
+        </div>
+
+        <!-- Inventário -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-backpack"></i> Inventário</h2>
+                <div class="slots-info">
+                    <div style="color: var(--accent); font-weight: bold; font-size: 1.1rem;">
+                        SLOTS: <span id="used-slots">0</span>/<span id="max-slots" style="color: var(--accent);">0</span>
+                    </div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">
+                        Capacidade: Força × 2 = <span id="capacity" style=" font-weight: bold;">2</span> slots
+                        <div style="font-size: 0.8rem; margin-top: 3px;">
+                            Disponível: <span id="available-slots">2</span> slots
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="overweight-warning" style="display: none; padding: 15px; background: rgba(255, 165, 2, 0.2); border-radius: 8px; border: 1px solid var(--warning); margin-bottom: 20px; color: var(--warning);">
+                ⚠ <strong>SOBREPESO!</strong> Penalidade de -15 em tudo físico
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-add" onclick="addItem()">
+                    <i class="fas fa-plus"></i> Adicionar Item ao Inventário
+                </button>
+            </div>
+            
+            <!-- Lista de itens -->
+            <div id="inventory-container">
+                <!-- Itens serão adicionados aqui -->
+            </div>
+        </div>
+
+        <!-- Habilidades -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-magic"></i> Habilidades</h2>
+            </div>
+            
+            <div class="ability-section">
+                <button class="btn btn-add" onclick="addAbility()">
+                    <i class="fas fa-plus"></i> Adicionar Habilidade
+                </button>
+                
+                <div id="abilities-container" style="margin-top: 20px;">
+                    <!-- Habilidades serão adicionadas aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Anotações -->
+        <div class="grid grid-3">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-book"></i> História</h2>
+                <textarea id="history" rows="8" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 8px; margin-top: 15px; resize: vertical;" placeholder="Conte a história do seu personagem..."></textarea>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-brain"></i> Personalidade & Manias</h2>
+                <textarea id="personality" rows="8" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 8px; margin-top: 15px; resize: vertical;" placeholder="Descreva a personalidade, manias e características..."></textarea>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-scroll"></i> Anotações</h2>
+                <textarea id="notes" rows="8" style="width: 100%; padding: 12px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 8px; margin-top: 15px; resize: vertical;" placeholder="Anotações gerais, eventos, traumas..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botões de Salvar/Carregar -->
+    <div style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000;">
+        <button class="btn" onclick="saveData()" style="background: linear-gradient(135deg, var(--success), #26c281);">
+            <i class="fas fa-save"></i> Salvar
+        </button>
+        <button class="btn" onclick="loadData()" style="background: linear-gradient(135deg, var(--warning), #ff7b00);">
+            <i class="fas fa-folder-open"></i> Carregar
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
