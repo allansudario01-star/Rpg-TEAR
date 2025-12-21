@@ -235,7 +235,7 @@ function resetFicha() {
     
     // Limpar ID atual
     currentCharacterId = null;
-    // localStorage.removeItem('currentCharacterId');
+    localStorage.removeItem('currentCharacterId');
     
     console.log("Ficha resetada para valores padrão!");
 }
@@ -798,9 +798,15 @@ function addAbility() {
 // ========== FIREBASE INTEGRATION ==========
 
 async function saveToFirebase() {
+    getFichaFromDOM();
     try {
+
         getFichaFromDOM();
-        
+         if (FirebaseService.isAuthenticated()) {
+        console.log("Já autenticado como:", FirebaseService.user.email);
+        return true;
+        }
+
         if (!FirebaseService.isAuthenticated()) {
             const authResult = await showAuthDialog();
             if (!authResult) return;
@@ -1135,10 +1141,10 @@ function initAfterLoad() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
-    // const characterIdToLoad = localStorage.getItem('currentCharacterId');
+    const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
+    const characterIdToLoad = localStorage.getItem('currentCharacterId');
     
-    // localStorage.removeItem('isNewCharacter');
+    localStorage.removeItem('isNewCharacter');
     
     if (characterIdToLoad && !isNewCharacter) {
         currentCharacterId = characterIdToLoad;
