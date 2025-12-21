@@ -156,7 +156,7 @@ header::after {
 }
 
 .title::after {
-    content: 'Threads, Echoes, and Reality';
+    content: 'Tecer. Ecoar. Afinar. Remendar';
     display: block;
     font-size: 1.4rem;
     color: var(--text-secondary);
