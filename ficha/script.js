@@ -135,7 +135,8 @@ function calculateInitiative() {
 }
 
 function calculateCapacity() {
-    return calculateTotalAttribute('strength') * 2;
+    const strength = calculateTotalAttribute('strength');
+    return Math.round(strength * 1.5);
 }
 
 function calculateLinGrade(value) {
@@ -885,7 +886,7 @@ function addItemToDOM(itemData = null) {
                     <option value="weapon" ${item.type === 'weapon' ? 'selected' : ''}>Arma</option>
                     <option value="armor" ${item.type === 'armor' ? 'selected' : ''}>Armadura</option>
                     <option value="consumable" ${item.type === 'consumable' ? 'selected' : ''}>Consumível</option>
-                    <option value="magic" ${item.type === 'magic' ? 'selected' : ''}>Mágico</option>
+                    <option value="magic" ${item.type === 'magic' ? 'selected' : ''}>Místico</option>
                     <option value="quest" ${item.type === 'quest' ? 'selected' : ''}>Missão</option>
                 </select>
             </div>
