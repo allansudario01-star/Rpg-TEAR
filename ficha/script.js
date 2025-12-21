@@ -89,6 +89,8 @@ const ficha = {
     },
     
     peculiarities: {},
+    inventory: [], 
+    abilities: [], 
     history: '',
     personality: '',
     notes: '',
@@ -276,6 +278,9 @@ function resetFicha() {
     PECULIARITIES.forEach(pec => {
         ficha.peculiarities[pec.id] = 0;
     });
+
+    ficha.inventory = [];
+    ficha.abilities = [];
     
     ficha.history = '';
     ficha.personality = '';
@@ -283,6 +288,13 @@ function resetFicha() {
     
     currentCharacterId = null;
     localStorage.removeItem('currentCharacterId');
+
+    const inventoryContainer = document.getElementById('inventory-container');
+    const abilitiesContainer = document.getElementById('abilities-container');
+    if (inventoryContainer) inventoryContainer.innerHTML = '';
+    if (abilitiesContainer) abilitiesContainer.innerHTML = '';
+    
+    updateInventorySlots();
 }
 
 // ========== FUNÇÕES DE INTERFACE ==========
@@ -358,6 +370,40 @@ function getFichaFromDOM() {
     document.querySelectorAll('.peculiarity-select').forEach(select => {
         const pecId = select.getAttribute('data-pec');
         ficha.peculiarities[pecId] = parseInt(select.value) || 0;
+    });
+
+     // INVENTÁRIO - Adicionar esta parte
+    ficha.inventory = [];
+    document.querySelectorAll('#inventory-container .inventory-item').forEach(item => {
+        const nameInput = item.querySelector('.item-name-input');
+        const slotsInput = item.querySelector('.item-slots-input');
+        const typeSelect = item.querySelector('.item-type-select');
+        const descInput = item.querySelector('.item-desc-input');
+        
+        if (nameInput && slotsInput && typeSelect) {
+            ficha.inventory.push({
+                name: nameInput.value || '',
+                slots: parseInt(slotsInput.value) || 1,
+                type: typeSelect.value || 'item',
+                description: descInput ? descInput.value : ''
+            });
+        }
+    });
+    
+    // HABILIDADES - Adicionar esta parte
+    ficha.abilities = [];
+    document.querySelectorAll('#abilities-container .ability-item').forEach(ability => {
+        const nameInput = ability.querySelector('input[type="text"]');
+        const typeSelect = ability.querySelector('select');
+        const descInput = ability.querySelector('textarea');
+        
+        if (nameInput && typeSelect && descInput) {
+            ficha.abilities.push({
+                name: nameInput.value || '',
+                type: typeSelect.value || 'passive',
+                description: descInput.value || ''
+            });
+        }
     });
     
     // Anotações
@@ -607,6 +653,24 @@ function renderFicha(fichaData) {
             if (select) select.value = value;
         }
     }
+
+    // INVENTÁRIO - Adicionar esta parte
+    const inventoryContainer = document.getElementById('inventory-container');
+    if (inventoryContainer && ficha.inventory) {
+        inventoryContainer.innerHTML = '';
+        ficha.inventory.forEach(item => {
+            addItemToDOM(item);
+        });
+    }
+    
+    // HABILIDADES - Adicionar esta parte
+    const abilitiesContainer = document.getElementById('abilities-container');
+    if (abilitiesContainer && ficha.abilities) {
+        abilitiesContainer.innerHTML = '';
+        ficha.abilities.forEach(ability => {
+            addAbilityToDOM(ability);
+        });
+    }
     
     // Anotações
     const history = document.getElementById('history');
@@ -619,6 +683,7 @@ function renderFicha(fichaData) {
     updateCalculations();
     updateGeneralReputation();
     updateLinGrades();
+    updateInventorySlots();
 }
 
 // ========== FUNÇÕES DE SISTEMA ==========
@@ -733,7 +798,15 @@ function updateInventorySlots() {
     items.forEach(item => {
         const slotInput = item.querySelector('.item-slots-input');
         if (slotInput) {
-            slotsUsed += parseInt(slotInput.value) || 1;
+            const value = parseInt(slotInput.value);
+            if (!isNaN(value) && value > 0) {
+                slotsUsed += value;
+            } else {
+                slotsUsed += 1; // Valor padrão se inválido
+                slotInput.value = 1;
+            }
+        } else {
+            slotsUsed += 1; // Valor padrão se não encontrar input
         }
     });
     
@@ -750,36 +823,78 @@ function updateInventorySlots() {
     isOverweight = slotsUsed > capacity;
     if (warning) {
         warning.style.display = isOverweight ? 'block' : 'none';
+        
+        // Adicionar efeito visual se estiver sobrecarregado
+        if (isOverweight) {
+            warning.style.animation = 'pulse 2s infinite';
+        } else {
+            warning.style.animation = 'none';
+        }
     }
     
     inventorySlotsUsed = slotsUsed;
+    
+    // Atualizar cores baseadas no uso
+    const capacityElement = document.getElementById('capacity');
+    const usedElement = document.getElementById('used-slots');
+    
+    if (capacityElement && usedElement) {
+        const percentage = (slotsUsed / capacity) * 100;
+        
+        if (percentage >= 90) {
+            usedElement.style.color = 'var(--danger)';
+            capacityElement.style.color = 'var(--danger)';
+        } else if (percentage >= 70) {
+            usedElement.style.color = 'var(--warning)';
+            capacityElement.style.color = 'var(--warning)';
+        } else {
+            usedElement.style.color = 'var(--success)';
+            capacityElement.style.color = 'var(--accent)';
+        }
+    }
 }
 
-function addItem() {
+function addItemToDOM(itemData = null) {
     const container = document.getElementById('inventory-container');
     if (!container) return;
     
     const itemDiv = document.createElement('div');
     itemDiv.className = 'inventory-item';
+    
+    // Dados padrão se não fornecido
+    const item = itemData || {
+        name: '',
+        slots: 1,
+        type: 'item',
+        description: ''
+    };
+    
     itemDiv.innerHTML = `
         <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr 0.5fr; gap: 15px; width: 100%; align-items: center;">
             <div>
-                <input type="text" placeholder="Nome do Item" class="item-name-input" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+                <input type="text" class="item-name-input" placeholder="Nome do Item" 
+                       value="${item.name}" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
             </div>
             <div>
-                <input type="number" class="item-slots-input" placeholder="Slots" min="1" value="1" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+                <input type="number" class="item-slots-input" placeholder="Slots" min="1" 
+                       value="${item.slots}" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
             </div>
             <div>
                 <select class="item-type-select" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
-                    <option value="item">Item</option>
-                    <option value="weapon">Arma</option>
+                    <option value="item" ${item.type === 'item' ? 'selected' : ''}>Item</option>
+                    <option value="weapon" ${item.type === 'weapon' ? 'selected' : ''}>Arma</option>
+                    <option value="armor" ${item.type === 'armor' ? 'selected' : ''}>Armadura</option>
+                    <option value="consumable" ${item.type === 'consumable' ? 'selected' : ''}>Consumível</option>
+                    <option value="magic" ${item.type === 'magic' ? 'selected' : ''}>Mágico</option>
+                    <option value="quest" ${item.type === 'quest' ? 'selected' : ''}>Missão</option>
                 </select>
             </div>
             <div>
-                <textarea placeholder="Descrição" rows="1" class="item-desc-input" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;"></textarea>
+                <textarea placeholder="Descrição" rows="1" class="item-desc-input" 
+                          style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">${item.description || ''}</textarea>
             </div>
             <div>
-                <button class="btn-remove" onclick="this.parentElement.parentElement.parentElement.remove(); updateInventorySlots();">
+                <button class="btn-remove" onclick="removeItem(this)" title="Remover item">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -788,48 +903,159 @@ function addItem() {
     
     container.appendChild(itemDiv);
     
+    // Adicionar event listeners para atualizar slots
     const slotsInput = itemDiv.querySelector('.item-slots-input');
     if (slotsInput) {
         slotsInput.addEventListener('input', updateInventorySlots);
     }
     
     updateInventorySlots();
+    
+    return itemDiv;
+}
+
+function addItem() {
+    addItemToDOM();
+}
+
+function removeItem(button) {
+    if (confirm("Tem certeza que deseja remover este item?")) {
+        const itemDiv = button.closest('.inventory-item');
+        if (itemDiv) {
+            itemDiv.remove();
+            updateInventorySlots();
+            showNotification('Item removido', 'info');
+        }
+    }
 }
 
 // ========== HABILIDADES ==========
 
-function addAbility() {
+function addAbilityToDOM(abilityData = null) {
     const container = document.getElementById('abilities-container');
     if (!container) return;
     
+    const ability = abilityData || {
+        name: '',
+        type: 'passive',
+        description: ''
+    };
+    
     const abilityDiv = document.createElement('div');
     abilityDiv.className = 'ability-item';
+    abilityDiv.style.cssText = `
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    `;
+    
     abilityDiv.innerHTML = `
-        <div class="ability-header">
-            <input type="text" placeholder="Nome" style="width: 300px; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
-            <select style="width: 100px; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
-                <option value="passive">Passiva</option>
-                <option value="active">Ativa</option>
-            </select>
-        </div>
-        <div style="grid-column: span 2;">
-            <textarea placeholder="Descrição" rows="3" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;"></textarea>
+        <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 15px; margin-bottom: 10px; align-items: center;">
+            <div>
+                <input type="text" class="ability-name" placeholder="Nome da Habilidade" 
+                       value="${ability.name}" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+            </div>
+            <div>
+                <select class="ability-type" style="width: 150px; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">
+                    <option value="passive" ${ability.type === 'passive' ? 'selected' : ''}>Passiva</option>
+                    <option value="active" ${ability.type === 'active' ? 'selected' : ''}>Ativa</option>
+                    <option value="reaction" ${ability.type === 'reaction' ? 'selected' : ''}>Reação</option>
+                    <option value="utility" ${ability.type === 'utility' ? 'selected' : ''}>Utilitária</option>
+                </select>
+            </div>
+            <div>
+                <button class="btn-remove" onclick="removeAbility(this)" title="Remover habilidade" style="padding: 10px 15px; background: var(--danger); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    <i class="fas fa-trash"></i> Remover
+                </button>
+            </div>
         </div>
         <div>
-            <button class="btn-remove" onclick="this.parentElement.parentElement.remove()">
-                <i class="fas fa-times"></i>
-            </button>
+            <textarea class="ability-description" placeholder="Descrição da habilidade (efeitos, custo, duração, etc.)" 
+                      rows="3" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">${ability.description || ''}</textarea>
         </div>
     `;
     
     container.appendChild(abilityDiv);
+    return abilityDiv;
 }
+
+function addAbility() {
+    addAbilityToDOM();
+}
+
+function removeAbility(button) {
+    if (confirm("Tem certeza que deseja remover esta habilidade?")) {
+        const abilityDiv = button.closest('.ability-item');
+        if (abilityDiv) {
+            abilityDiv.remove();
+            showNotification('Habilidade removida', 'info');
+        }
+    }
+}
+
+function saveInventoryLocally() {
+    try {
+        const inventoryData = [];
+        document.querySelectorAll('#inventory-container .inventory-item').forEach(item => {
+            const nameInput = item.querySelector('.item-name-input');
+            const slotsInput = item.querySelector('.item-slots-input');
+            const typeSelect = item.querySelector('.item-type-select');
+            const descInput = item.querySelector('.item-desc-input');
+            
+            if (nameInput && slotsInput && typeSelect) {
+                inventoryData.push({
+                    name: nameInput.value || '',
+                    slots: parseInt(slotsInput.value) || 1,
+                    type: typeSelect.value || 'item',
+                    description: descInput ? descInput.value : ''
+                });
+            }
+        });
+        
+        localStorage.setItem('inventoryBackup', JSON.stringify(inventoryData));
+        return true;
+    } catch (error) {
+        console.error('Erro ao salvar inventário localmente:', error);
+        return false;
+    }
+}
+
+function saveAbilitiesLocally() {
+    try {
+        const abilitiesData = [];
+        document.querySelectorAll('#abilities-container .ability-item').forEach(ability => {
+            const nameInput = ability.querySelector('.ability-name');
+            const typeSelect = ability.querySelector('.ability-type');
+            const descInput = ability.querySelector('.ability-description');
+            
+            if (nameInput && typeSelect && descInput) {
+                abilitiesData.push({
+                    name: nameInput.value || '',
+                    type: typeSelect.value || 'passive',
+                    description: descInput.value || ''
+                });
+            }
+        });
+        
+        localStorage.setItem('abilitiesBackup', JSON.stringify(abilitiesData));
+        return true;
+    } catch (error) {
+        console.error('Erro ao salvar habilidades localmente:', error);
+        return false;
+    }
+}
+
 
 // ========== FIREBASE INTEGRATION ==========
 
 async function saveToFirebase() {
     try {
         getFichaFromDOM();
+
+        saveInventoryLocally();
+        saveAbilitiesLocally();
         
         if (!FirebaseService.isAuthenticated()) {
             const authResult = await showAuthDialog();
@@ -851,12 +1077,25 @@ async function saveToFirebase() {
             currentCharacterId = result.characterId;
             localStorage.setItem('currentCharacterId', currentCharacterId);
             
-            showNotification('✅ Ficha salva na nuvem!', 'success');
+            showNotification('Ficha salva na nuvem!', 'success');
         } else {
             throw new Error(result.error);
         }
     } catch (error) {
         showNotification(`❌ Erro: ${error.message}`, 'error');
+
+        try {
+            const fullBackup = {
+                ficha: ficha,
+                inventory: ficha.inventory || [],
+                abilities: ficha.abilities || [],
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('fullCharacterBackup', JSON.stringify(fullBackup));
+            console.log("Backup completo salvo localmente");
+        } catch (e) {
+            console.error("Não foi possível salvar backup completo:", e);
+        }
         
         try {
             localStorage.setItem('fichaEmergencyBackup', JSON.stringify(ficha));
