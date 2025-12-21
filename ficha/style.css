@@ -488,6 +488,14 @@ header::after {
     position: relative;
 }
 
+.essence-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
 .health-input-container::before {
     content: 'HP';
     position: absolute;
@@ -499,6 +507,32 @@ header::after {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+.essence-input-container::before {
+    content: 'EF';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.essence-input-container input {
+    width: 100px;
+    text-align: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .health-input-container input {
@@ -515,6 +549,13 @@ header::after {
 }
 
 .health-input-container input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.essence-input-container input:focus {
     outline: none;
     border-color: var(--accent-blue);
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
