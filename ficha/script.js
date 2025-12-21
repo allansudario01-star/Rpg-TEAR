@@ -119,19 +119,19 @@ function calculateBaseMaxEssence() {
 
 function calculateDefense() {
     const dexterity = calculateTotalAttribute('dexterity');
-    return Math.floor(10 + (dexterity / 3)) + ficha.armor + ficha.defenseBonus;
+    return Math.floor(((10 + (dexterity/2.5)) + ficha.armor + ficha.defenseBonus)/2);
 }
 
 function calculateResistance() {
     const spirit = calculateTotalAttribute('spirit');
     const linecinese = calculateTotalAttribute('linecinese');
-    return Math.floor(10 + (spirit / 2) + (linecinese / 5)) + ficha.resistanceBonus;
+    return Math.floor((10 + (spirit / 2) + (linecinese / 2) + ficha.resistanceBonus)/2.5);
 }
 
 function calculateInitiative() {
     const dexterity = calculateTotalAttribute('dexterity');
     const intelligence = calculateTotalAttribute('intelligence');
-    return (dexterity + intelligence) / 4;
+    return (dexterity + intelligence) / 2;
 }
 
 function calculateCapacity() {
