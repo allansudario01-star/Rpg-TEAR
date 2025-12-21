@@ -1,204 +1,7 @@
-// script.js - COMPLETO COM FIREBASE
+// ========== CONFIGURAÇÕES E CONSTANTES ==========
 
-// ========== OBJETO FICHA CENTRAL ==========
-
-
-
-const ficha = {
-    // Informações básicas
-    playerName: '',
-    characterName: '',
-    level: 1,
-    money: 0,
-    
-    // Atributos principais
-    attributes: {
-        strength: { base: 1, mod: 0 },
-        constitution: { base: 1, mod: 0 },
-        dexterity: { base: 1, mod: 0 },
-        intelligence: { base: 1, mod: 0 },
-        spirit: { base: 1, mod: 0 },
-        linecinese: { base: 1, mod: 0 }
-    },
-    
-    // Sub-atributos Linecinese
-    linAttributes: {
-        attr1: { base: 0, mod: 0 },
-        attr2: { base: 0, mod: 0 },
-        attr3: { base: 0, mod: 0 },
-        attr4: { base: 0, mod: 0 }
-    },
-    
-    // Afinidade
-    linAffinity: null,
-    
-    // Status
-    health: { current: 9, max: 9 },
-    essence: { current: 3, max: 3 },
-    
-    // Estado
-    threadState: 'rest',
-    tenseState: 'stable',
-    
-    // Características
-    profession: '',
-    web: '',
-    background: '',
-    
-    // Bônus
-    armor: 0,
-    defenseBonus: 0,
-    resistanceBonus: 0,
-    essenceBonus: 0,
-    
-    // Reputação
-    reputation: {
-        weavers: 0,
-        church: 0,
-        periphery: 0,
-        hunters: 0,
-        survivors: 0
-    },
-    
-    // Peculiaridades
-    peculiarities: {},
-    
-    // Anotações
-    history: '',
-    personality: '',
-    notes: '',
-    
-    // Metadados (para Firebase)
-    userId: null,
-    lastUpdated: null,
-    createdAt: null
-};
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar se é uma NOVA ficha ou precisa carregar uma existente
-    const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
-    const characterIdToLoad = localStorage.getItem('currentCharacterId');
-    
-    // Limpar o flag de nova ficha (só serve uma vez)
-    localStorage.removeItem('isNewCharacter');
-    
-    if (characterIdToLoad && !isNewCharacter) {
-        // Tem um personagem para CARREGAR (não é novo)
-        currentCharacterId = characterIdToLoad;
-        
-        // Aguardar autenticação e carregar o personagem
-        FirebaseService.onAuthStateChanged(async (user) => {
-            if (user) {
-                const result = await FirebaseService.loadFicha(characterIdToLoad);
-                if (result.success) {
-                    renderFicha(result.data);
-                    showNotification(`Personagem "${result.data.characterName}" carregado!`, 'success');
-                    
-                    // Inicializar o resto
-                    initAfterLoad();
-                }
-            }
-        });
-    } else {
-        // NOVO personagem ou ficha em branco
-        // 1. Resetar a ficha para valores padrão
-        resetFicha();
-        
-        // 2. Renderizar a ficha limpa
-        renderFicha(ficha);
-        
-        // 3. Mostrar mensagem
-        showNotification("Nova ficha criada. Preencha os dados!", 'info');
-        
-        // 4. Inicializar o resto
-        initAfterLoad();
-    }
-});
-
-// Função para inicialização comum (após carregar ou resetar)
-function initAfterLoad() {
-    initPeculiarities();
-    setupEventListeners();
-    updateCalculations();
-    updateInventorySlots();
-    
-    // Se tiver afinidade selecionada, aplicar
-    if (ficha.linAffinity) {
-        document.getElementById('lin-affinity').value = ficha.linAffinity;
-        applyAffinity();
-    }
-}
-
-// ========== FUNÇÃO PARA LIMPAR FICHA ==========
-function resetFicha() {
-    // Reseta o objeto ficha para valores padrão
-    ficha.playerName = '';
-    ficha.characterName = '';
-    ficha.level = 1;
-    ficha.money = 0;
-    
-    // Atributos principais (valores base 1, mod 0)
-    const attrs = ['strength', 'constitution', 'dexterity', 'intelligence', 'spirit', 'linecinese'];
-    attrs.forEach(attr => {
-        ficha.attributes[attr] = { base: 1, mod: 0 };
-    });
-    
-    // Sub-atributos LIN
-    for (let i = 1; i <= 4; i++) {
-        ficha.linAttributes[`attr${i}`] = { base: 0, mod: 0 };
-    }
-    
-    // Status
-    ficha.health = { current: 9, max: 9 };
-    ficha.essence = { current: 3, max: 3 };
-    
-    // Estado
-    ficha.threadState = 'rest';
-    ficha.tenseState = 'stable';
-    ficha.linAffinity = null;
-    
-    // Características
-    ficha.profession = '';
-    ficha.web = '';
-    ficha.background = '';
-    
-    // Bônus
-    ficha.armor = 0;
-    ficha.defenseBonus = 0;
-    ficha.resistanceBonus = 0;
-    ficha.essenceBonus = 0;
-    
-    // Reputação
-    ficha.reputation = {
-        weavers: 0,
-        church: 0,
-        periphery: 0,
-        hunters: 0,
-        survivors: 0
-    };
-    
-    // Peculiaridades (reseta para 0)
-    peculiaritiesList.forEach(pec => {
-        ficha.peculiarities[pec.id] = 0;
-    });
-    
-    // Anotações
-    ficha.history = '';
-    ficha.personality = '';
-    ficha.notes = '';
-    
-    // Limpar o ID atual (IMPORTANTE!)
-    currentCharacterId = null;
-    
-    // Limpar localStorage
-    localStorage.removeItem('currentCharacterId');
-    
-    console.log("Ficha resetada para valores padrão!");
-}
-
-// ========== CONFIGURAÇÕES ==========
-const peculiaritiesList = [
+// Lista de peculiaridades
+const PECULIARITIES = [
     { id: 'weapon-handling', name: 'Manuseio de Armas', attr: 'dexterity' },
     { id: 'religion', name: 'Religião', attr: 'intelligence' },
     { id: 'lin', name: 'LIN (Controle de Nó)', attr: 'linecinese' },
@@ -227,30 +30,89 @@ const peculiaritiesList = [
     { id: 'will', name: 'Vontade', attr: 'spirit' }
 ];
 
-const affinityMap = {
+// Mapa de afinidade
+const AFFINITY_MAP = {
     1: { advantage: 1, disadvantage: 2, bonus: 5, penalty: -5 },
     2: { advantage: 2, disadvantage: 3, bonus: 5, penalty: -5 },
     3: { advantage: 3, disadvantage: 4, bonus: 5, penalty: -5 },
     4: { advantage: 4, disadvantage: 1, bonus: 5, penalty: -5 }
 };
 
-// ========== VARIÁVEIS GLOBAIS ==========
+// ========== ESTADO GLOBAL ==========
+
 let currentCharacterId = null;
 let isOverweight = false;
 let inventorySlotsUsed = 0;
+let listenersConfigured = false;
 
-// ========== FUNÇÕES DE CÁLCULO ==========
+// Objeto principal da ficha
+const ficha = {
+    playerName: '',
+    characterName: '',
+    level: 1,
+    money: 0,
+    
+    attributes: {
+        strength: { base: 1, mod: 0 },
+        constitution: { base: 1, mod: 0 },
+        dexterity: { base: 1, mod: 0 },
+        intelligence: { base: 1, mod: 0 },
+        spirit: { base: 1, mod: 0 },
+        linecinese: { base: 1, mod: 0 }
+    },
+    
+    linAttributes: {
+        attr1: { base: 0, mod: 0 },
+        attr2: { base: 0, mod: 0 },
+        attr3: { base: 0, mod: 0 },
+        attr4: { base: 0, mod: 0 }
+    },
+    
+    linAffinity: null,
+    health: { current: 9, max: 9 },
+    essence: { current: 3, max: 3 },
+    threadState: 'rest',
+    tenseState: 'stable',
+    profession: '',
+    web: '',
+    background: '',
+    armor: 0,
+    defenseBonus: 0,
+    resistanceBonus: 0,
+    essenceBonus: 0,
+    
+    reputation: {
+        weavers: 0,
+        church: 0,
+        periphery: 0,
+        hunters: 0,
+        survivors: 0
+    },
+    
+    peculiarities: {},
+    history: '',
+    personality: '',
+    notes: '',
+    userId: null,
+    lastUpdated: null,
+    createdAt: null
+};
+
+// ========== FUNÇÕES DE CÁLCULO (PURAS) ==========
+
 function calculateTotalAttribute(attr) {
     return ficha.attributes[attr].base + ficha.attributes[attr].mod;
 }
 
-function calculateMaxHealth() {
+// CALCULA o máximo BASE (sem bônus temporários)
+function calculateBaseMaxHealth() {
     const constitution = calculateTotalAttribute('constitution');
     const strength = calculateTotalAttribute('strength');
     return (constitution * 3) + strength + (ficha.level * 5);
 }
 
-function calculateMaxEssence() {
+// CALCULA o máximo BASE de essência (sem bônus temporários)
+function calculateBaseMaxEssence() {
     const linecinese = calculateTotalAttribute('linecinese');
     const spirit = calculateTotalAttribute('spirit');
     return (linecinese * 2) + spirit + ficha.essenceBonus;
@@ -296,20 +158,90 @@ function calculateAvailableLinPoints() {
     return linecinese - calculateTotalLinPoints();
 }
 
+// ========== FUNÇÕES DE ESTADO ==========
+
 function updateCalculations() {
-    // Atualizar valores máximos
-    ficha.health.max = calculateMaxHealth();
-    ficha.essence.max = calculateMaxEssence();
+    // Atualizar os máximos BASE (para exibição)
+    ficha.health.max = calculateBaseMaxHealth();
+    ficha.essence.max = calculateBaseMaxEssence();
     
-    // Ajustar valores atuais
-    if (ficha.health.current > ficha.health.max) ficha.health.current = ficha.health.max;
-    if (ficha.essence.current > ficha.essence.max) ficha.essence.current = ficha.essence.max;
+    // NÃO LIMITAR os valores atuais! Podem ser maiores que o máximo
+    // Apenas garantir que não sejam negativos
+    if (ficha.health.current < 0) ficha.health.current = 0;
+    if (ficha.essence.current < 0) ficha.essence.current = 0;
     
-    // Atualizar dados calculados no DOM
     renderCalculatedValues();
 }
 
+function resetFicha() {
+    // Informações básicas
+    ficha.playerName = '';
+    ficha.characterName = '';
+    ficha.level = 1;
+    ficha.money = 0;
+    
+    // Atributos principais
+    const attrs = ['strength', 'constitution', 'dexterity', 'intelligence', 'spirit', 'linecinese'];
+    attrs.forEach(attr => {
+        ficha.attributes[attr] = { base: 1, mod: 0 };
+    });
+    
+    // Sub-atributos LIN
+    for (let i = 1; i <= 4; i++) {
+        ficha.linAttributes[`attr${i}`] = { base: 0, mod: 0 };
+    }
+    
+    // Status (começa no máximo base)
+    const baseHealth = calculateBaseMaxHealth();
+    const baseEssence = calculateBaseMaxEssence();
+    
+    ficha.health = { current: baseHealth, max: baseHealth };
+    ficha.essence = { current: baseEssence, max: baseEssence };
+    
+    // Estado
+    ficha.threadState = 'rest';
+    ficha.tenseState = 'stable';
+    ficha.linAffinity = null;
+    
+    // Características
+    ficha.profession = '';
+    ficha.web = '';
+    ficha.background = '';
+    
+    // Bônus
+    ficha.armor = 0;
+    ficha.defenseBonus = 0;
+    ficha.resistanceBonus = 0;
+    ficha.essenceBonus = 0;
+    
+    // Reputação
+    ficha.reputation = {
+        weavers: 0,
+        church: 0,
+        periphery: 0,
+        hunters: 0,
+        survivors: 0
+    };
+    
+    // Peculiaridades
+    PECULIARITIES.forEach(pec => {
+        ficha.peculiarities[pec.id] = 0;
+    });
+    
+    // Anotações
+    ficha.history = '';
+    ficha.personality = '';
+    ficha.notes = '';
+    
+    // Limpar ID atual
+    currentCharacterId = null;
+    localStorage.removeItem('currentCharacterId');
+    
+    console.log("Ficha resetada para valores padrão!");
+}
+
 // ========== FUNÇÕES DE INTERFACE ==========
+
 function getFichaFromDOM() {
     // Informações básicas
     ficha.playerName = document.getElementById('player-name').value;
@@ -317,48 +249,65 @@ function getFichaFromDOM() {
     ficha.level = parseInt(document.getElementById('level').value) || 1;
     ficha.money = parseInt(document.getElementById('money').value) || 0;
     
-    // Atributos
+    // Atributos principais
     const attrs = ['strength', 'constitution', 'dexterity', 'intelligence', 'spirit', 'linecinese'];
     attrs.forEach(attr => {
-        ficha.attributes[attr].base = parseInt(document.getElementById(attr).value) || 1;
-        ficha.attributes[attr].mod = parseInt(document.getElementById(`${attr}-mod`).value) || 0;
+        const baseInput = document.getElementById(attr);
+        const modInput = document.getElementById(`${attr}-mod`);
+        
+        if (baseInput) ficha.attributes[attr].base = parseInt(baseInput.value) || 1;
+        if (modInput) ficha.attributes[attr].mod = parseInt(modInput.value) || 0;
     });
     
     // Sub-atributos LIN
     for (let i = 1; i <= 4; i++) {
-        const attr = ficha.linAttributes[`attr${i}`];
-        attr.base = parseInt(document.getElementById(`lin-attr-${i}`).value) || 0;
-        attr.mod = parseInt(document.getElementById(`lin-mod-${i}`).value) || 0;
+        const baseInput = document.getElementById(`lin-attr-${i}`);
+        const modInput = document.getElementById(`lin-mod-${i}`);
+        
+        if (baseInput) ficha.linAttributes[`attr${i}`].base = parseInt(baseInput.value) || 0;
+        if (modInput) ficha.linAttributes[`attr${i}`].mod = parseInt(modInput.value) || 0;
     }
     
     // Afinidade
-    ficha.linAffinity = document.getElementById('lin-affinity').value || null;
+    const affinitySelect = document.getElementById('lin-affinity');
+    if (affinitySelect) ficha.linAffinity = affinitySelect.value || null;
     
     // Status atuais
-    ficha.health.current = parseInt(document.getElementById('current-health').value) || 0;
-    ficha.essence.current = parseInt(document.getElementById('current-essence').value) || 0;
+    const currentHealth = document.getElementById('current-health');
+    const currentEssence = document.getElementById('current-essence');
+    if (currentHealth) ficha.health.current = parseInt(currentHealth.value) || 0;
+    if (currentEssence) ficha.essence.current = parseInt(currentEssence.value) || 0;
     
-    // Estado
-    ficha.threadState = document.getElementById('thread-state').value;
-    ficha.tenseState = document.getElementById('tense-state').value;
+    // Estado do Fio
+    const threadState = document.getElementById('thread-state');
+    const tenseState = document.getElementById('tense-state');
+    if (threadState) ficha.threadState = threadState.value;
+    if (tenseState) ficha.tenseState = tenseState.value;
     
     // Características
-    ficha.profession = document.getElementById('profession').value;
-    ficha.web = document.getElementById('web').value;
-    ficha.background = document.getElementById('background').value;
+    const profession = document.getElementById('profession');
+    const web = document.getElementById('web');
+    const background = document.getElementById('background');
+    if (profession) ficha.profession = profession.value;
+    if (web) ficha.web = web.value;
+    if (background) ficha.background = background.value;
     
     // Bônus
-    ficha.armor = parseInt(document.getElementById('armor').value) || 0;
-    ficha.defenseBonus = parseInt(document.getElementById('defense-bonus').value) || 0;
-    ficha.resistanceBonus = parseInt(document.getElementById('resistance-bonus').value) || 0;
-    ficha.essenceBonus = parseInt(document.getElementById('essence-bonus').value) || 0;
+    const armor = document.getElementById('armor');
+    const defenseBonus = document.getElementById('defense-bonus');
+    const resistanceBonus = document.getElementById('resistance-bonus');
+    const essenceBonus = document.getElementById('essence-bonus');
+    if (armor) ficha.armor = parseInt(armor.value) || 0;
+    if (defenseBonus) ficha.defenseBonus = parseInt(defenseBonus.value) || 0;
+    if (resistanceBonus) ficha.resistanceBonus = parseInt(resistanceBonus.value) || 0;
+    if (essenceBonus) ficha.essenceBonus = parseInt(essenceBonus.value) || 0;
     
     // Reputação
-    ficha.reputation.weavers = parseInt(document.getElementById('rep-weavers').value) || 0;
-    ficha.reputation.church = parseInt(document.getElementById('rep-church').value) || 0;
-    ficha.reputation.periphery = parseInt(document.getElementById('rep-periphery').value) || 0;
-    ficha.reputation.hunters = parseInt(document.getElementById('rep-hunters').value) || 0;
-    ficha.reputation.survivors = parseInt(document.getElementById('rep-survivors').value) || 0;
+    const reputations = ['weavers', 'church', 'periphery', 'hunters', 'survivors'];
+    reputations.forEach(rep => {
+        const slider = document.getElementById(`rep-${rep}`);
+        if (slider) ficha.reputation[rep] = parseInt(slider.value) || 0;
+    });
     
     // Peculiaridades
     document.querySelectorAll('.peculiarity-select').forEach(select => {
@@ -367,73 +316,93 @@ function getFichaFromDOM() {
     });
     
     // Anotações
-    ficha.history = document.getElementById('history').value;
-    ficha.personality = document.getElementById('personality').value;
-    ficha.notes = document.getElementById('notes').value;
+    const history = document.getElementById('history');
+    const personality = document.getElementById('personality');
+    const notes = document.getElementById('notes');
+    if (history) ficha.history = history.value;
+    if (personality) ficha.personality = personality.value;
+    if (notes) ficha.notes = notes.value;
     
     return ficha;
 }
 
 function renderFicha(fichaData) {
-    // Atualizar objeto ficha
     Object.assign(ficha, fichaData);
     
     // Informações básicas
-    document.getElementById('player-name').value = ficha.playerName || '';
-    document.getElementById('character-name').value = ficha.characterName || '';
-    document.getElementById('level').value = ficha.level || 1;
-    document.getElementById('money').value = ficha.money || 0;
+    const playerName = document.getElementById('player-name');
+    const characterName = document.getElementById('character-name');
+    const level = document.getElementById('level');
+    const money = document.getElementById('money');
+    if (playerName) playerName.value = ficha.playerName || '';
+    if (characterName) characterName.value = ficha.characterName || '';
+    if (level) level.value = ficha.level || 1;
+    if (money) money.value = ficha.money || 0;
     
-    // Atributos
+    // Atributos principais
     const attrs = ['strength', 'constitution', 'dexterity', 'intelligence', 'spirit', 'linecinese'];
     attrs.forEach(attr => {
-        document.getElementById(attr).value = ficha.attributes[attr]?.base || 1;
-        document.getElementById(`${attr}-mod`).value = ficha.attributes[attr]?.mod || 0;
+        const baseInput = document.getElementById(attr);
+        const modInput = document.getElementById(`${attr}-mod`);
+        if (baseInput) baseInput.value = ficha.attributes[attr]?.base || 1;
+        if (modInput) modInput.value = ficha.attributes[attr]?.mod || 0;
     });
     
     // Sub-atributos LIN
     for (let i = 1; i <= 4; i++) {
         const attr = ficha.linAttributes[`attr${i}`] || { base: 0, mod: 0 };
-        document.getElementById(`lin-attr-${i}`).value = attr.base || 0;
-        document.getElementById(`lin-mod-${i}`).value = attr.mod || 0;
+        const baseInput = document.getElementById(`lin-attr-${i}`);
+        const modInput = document.getElementById(`lin-mod-${i}`);
+        if (baseInput) baseInput.value = attr.base || 0;
+        if (modInput) modInput.value = attr.mod || 0;
     }
     
     // Afinidade
-    document.getElementById('lin-affinity').value = ficha.linAffinity || '';
+    const affinitySelect = document.getElementById('lin-affinity');
+    if (affinitySelect) affinitySelect.value = ficha.linAffinity || '';
     
     // Status atuais
-    document.getElementById('current-health').value = ficha.health?.current || 0;
-    document.getElementById('current-essence').value = ficha.essence?.current || 0;
+    const currentHealth = document.getElementById('current-health');
+    const currentEssence = document.getElementById('current-essence');
+    if (currentHealth) currentHealth.value = ficha.health?.current || 0;
+    if (currentEssence) currentEssence.value = ficha.essence?.current || 0;
     
-    // Estado
-    document.getElementById('thread-state').value = ficha.threadState || 'rest';
-    document.getElementById('tense-state').value = ficha.tenseState || 'stable';
-    document.getElementById('tense-state-container').style.display = ficha.threadState === 'tense' ? 'block' : 'none';
+    // Estado do Fio
+    const threadState = document.getElementById('thread-state');
+    const tenseState = document.getElementById('tense-state');
+    const tenseContainer = document.getElementById('tense-state-container');
+    if (threadState) threadState.value = ficha.threadState || 'rest';
+    if (tenseState) tenseState.value = ficha.tenseState || 'stable';
+    if (tenseContainer) {
+        tenseContainer.style.display = ficha.threadState === 'tense' ? 'block' : 'none';
+    }
     
     // Características
-    document.getElementById('profession').value = ficha.profession || '';
-    document.getElementById('web').value = ficha.web || '';
-    document.getElementById('background').value = ficha.background || '';
+    const profession = document.getElementById('profession');
+    const web = document.getElementById('web');
+    const background = document.getElementById('background');
+    if (profession) profession.value = ficha.profession || '';
+    if (web) web.value = ficha.web || '';
+    if (background) background.value = ficha.background || '';
     
     // Bônus
-    document.getElementById('armor').value = ficha.armor || 0;
-    document.getElementById('defense-bonus').value = ficha.defenseBonus || 0;
-    document.getElementById('resistance-bonus').value = ficha.resistanceBonus || 0;
-    document.getElementById('essence-bonus').value = ficha.essenceBonus || 0;
+    const armor = document.getElementById('armor');
+    const defenseBonus = document.getElementById('defense-bonus');
+    const resistanceBonus = document.getElementById('resistance-bonus');
+    const essenceBonus = document.getElementById('essence-bonus');
+    if (armor) armor.value = ficha.armor || 0;
+    if (defenseBonus) defenseBonus.value = ficha.defenseBonus || 0;
+    if (resistanceBonus) resistanceBonus.value = ficha.resistanceBonus || 0;
+    if (essenceBonus) essenceBonus.value = ficha.essenceBonus || 0;
     
     // Reputação
-    document.getElementById('rep-weavers').value = ficha.reputation?.weavers || 0;
-    document.getElementById('rep-church').value = ficha.reputation?.church || 0;
-    document.getElementById('rep-periphery').value = ficha.reputation?.periphery || 0;
-    document.getElementById('rep-hunters').value = ficha.reputation?.hunters || 0;
-    document.getElementById('rep-survivors').value = ficha.reputation?.survivors || 0;
-    
-    // Atualizar displays de reputação
-    document.getElementById('rep-weavers-value').textContent = ficha.reputation?.weavers || 0;
-    document.getElementById('rep-church-value').textContent = ficha.reputation?.church || 0;
-    document.getElementById('rep-periphery-value').textContent = ficha.reputation?.periphery || 0;
-    document.getElementById('rep-hunters-value').textContent = ficha.reputation?.hunters || 0;
-    document.getElementById('rep-survivors-value').textContent = ficha.reputation?.survivors || 0;
+    const reputations = ['weavers', 'church', 'periphery', 'hunters', 'survivors'];
+    reputations.forEach(rep => {
+        const slider = document.getElementById(`rep-${rep}`);
+        const valueDisplay = document.getElementById(`rep-${rep}-value`);
+        if (slider) slider.value = ficha.reputation?.[rep] || 0;
+        if (valueDisplay) valueDisplay.textContent = ficha.reputation?.[rep] || 0;
+    });
     
     // Peculiaridades
     if (ficha.peculiarities) {
@@ -444,134 +413,274 @@ function renderFicha(fichaData) {
     }
     
     // Anotações
-    document.getElementById('history').value = ficha.history || '';
-    document.getElementById('personality').value = ficha.personality || '';
-    document.getElementById('notes').value = ficha.notes || '';
+    const history = document.getElementById('history');
+    const personality = document.getElementById('personality');
+    const notes = document.getElementById('notes');
+    if (history) history.value = ficha.history || '';
+    if (personality) personality.value = ficha.personality || '';
+    if (notes) notes.value = ficha.notes || '';
     
-    // Atualizar cálculos
     updateCalculations();
     updateGeneralReputation();
     updateLinGrades();
 }
 
 function renderCalculatedValues() {
-    // Vida
-    const healthPercent = ficha.health.max > 0 ? (ficha.health.current / ficha.health.max) * 100 : 0;
-    document.getElementById('health-value').textContent = ficha.health.current;
-    document.getElementById('health-text').textContent = `${ficha.health.current}/${ficha.health.max}`;
-    document.getElementById('health-bar').style.width = `${healthPercent}%`;
-    
-    // Cor da barra de vida
+    // Vida - mostrar ATUAL / MÁXIMO BASE
+    const healthValue = document.getElementById('health-value');
+    const healthText = document.getElementById('health-text');
     const healthBar = document.getElementById('health-bar');
-    if (healthPercent > 50) {
-        healthBar.style.background = 'linear-gradient(90deg, #2ed573, #27ae60)';
-    } else if (healthPercent > 25) {
-        healthBar.style.background = 'linear-gradient(90deg, #ffa502, #f39c12)';
-    } else {
-        healthBar.style.background = 'linear-gradient(90deg, #ff4757, #e74c3c)';
+    
+    // Calcular porcentagem baseada no máximo (mas pode mostrar >100%)
+    const healthPercent = ficha.health.max > 0 ? (ficha.health.current / ficha.health.max) * 100 : 0;
+    
+    if (healthValue) healthValue.textContent = ficha.health.current;
+    if (healthText) healthText.textContent = `${ficha.health.current} / ${ficha.health.max}`;
+    
+    // Barra de vida - se >100%, mostrar cheia com efeito especial
+    if (healthBar) {
+        if (healthPercent <= 100) {
+            healthBar.style.width = `${healthPercent}%`;
+        } else {
+            // Se tiver mais que 100%, mostrar barra cheia com efeito
+            healthBar.style.width = '100%';
+            healthBar.style.background = 'linear-gradient(90deg, #2ed573, #27ae60, #00d4ff)';
+            healthBar.style.backgroundSize = '200% 100%';
+            healthBar.style.animation = 'pulse 2s infinite';
+        }
+        
+        // Cor normal da barra (só se não estiver com bônus)
+        if (healthPercent <= 100) {
+            if (healthPercent > 50) {
+                healthBar.style.background = 'linear-gradient(90deg, #2ed573, #27ae60)';
+            } else if (healthPercent > 25) {
+                healthBar.style.background = 'linear-gradient(90deg, #ffa502, #f39c12)';
+            } else {
+                healthBar.style.background = 'linear-gradient(90deg, #ff4757, #e74c3c)';
+            }
+        }
     }
     
-    // Estado morrendo
+    // Estado morrendo (só se for 0)
     const healthCard = document.getElementById('health-card');
-    if (ficha.health.current === 0) {
-        healthCard.classList.add('dying');
-    } else {
-        healthCard.classList.remove('dying');
+    if (healthCard) {
+        if (ficha.health.current === 0) {
+            healthCard.classList.add('dying');
+        } else {
+            healthCard.classList.remove('dying');
+        }
     }
     
-    // Essência
+    // Essência - mostrar ATUAL / MÁXIMO BASE
+    const essenceValue = document.getElementById('essence-value');
+    const essenceText = document.getElementById('essence-text');
+    const essenceBar = document.getElementById('essence-bar');
+    
+    // Calcular porcentagem baseada no máximo (mas pode mostrar >100%)
     const essencePercent = ficha.essence.max > 0 ? (ficha.essence.current / ficha.essence.max) * 100 : 0;
-    document.getElementById('essence-value').textContent = ficha.essence.current;
-    document.getElementById('essence-text').textContent = `${ficha.essence.current}/${ficha.essence.max}`;
-    document.getElementById('essence-bar').style.width = `${essencePercent}%`;
+    
+    if (essenceValue) essenceValue.textContent = ficha.essence.current;
+    if (essenceText) essenceText.textContent = `${ficha.essence.current} / ${ficha.essence.max}`;
+    
+    // Barra de essência - se >100%, mostrar cheia com efeito especial
+    if (essenceBar) {
+        if (essencePercent <= 100) {
+            essenceBar.style.width = `${essencePercent}%`;
+            essenceBar.style.background = 'linear-gradient(90deg, #00d4ff, #0097cc)';
+        } else {
+            // Se tiver mais que 100%, mostrar barra cheia com efeito
+            essenceBar.style.width = '100%';
+            essenceBar.style.background = 'linear-gradient(90deg, #00d4ff, #0097cc, #ff00ff)';
+            essenceBar.style.backgroundSize = '200% 100%';
+            essenceBar.style.animation = 'pulse 2s infinite';
+        }
+    }
     
     // Outros status calculados
-    document.getElementById('defense-value').textContent = calculateDefense();
-    document.getElementById('resistance-value').textContent = calculateResistance();
-    document.getElementById('initiative-value').textContent = `d100 + ${calculateInitiative().toFixed(1)}`;
+    const defenseValue = document.getElementById('defense-value');
+    const resistanceValue = document.getElementById('resistance-value');
+    const initiativeValue = document.getElementById('initiative-value');
+    const capacity = document.getElementById('capacity');
+    const maxSlots = document.getElementById('max-slots');
+    const linPoints = document.getElementById('lin-points-available');
+    const linSection = document.getElementById('lin-subattributes-section');
     
-    // Capacidade
-    const capacity = calculateCapacity();
-    document.getElementById('capacity').textContent = capacity;
-    document.getElementById('max-slots').textContent = capacity;
+    if (defenseValue) defenseValue.textContent = calculateDefense();
+    if (resistanceValue) resistanceValue.textContent = calculateResistance();
+    if (initiativeValue) initiativeValue.textContent = `d100 + ${calculateInitiative().toFixed(1)}`;
     
-    // Pontos LIN
-    const availableLinPoints = calculateAvailableLinPoints();
-    document.getElementById('lin-points-available').textContent = availableLinPoints;
+    const capValue = calculateCapacity();
+    if (capacity) capacity.textContent = capValue;
+    if (maxSlots) maxSlots.textContent = capValue;
+    
+    if (linPoints) linPoints.textContent = calculateAvailableLinPoints();
     
     // Mostrar/ocultar seção LIN
-    const section = document.getElementById('lin-subattributes-section');
-    const linecinese = calculateTotalAttribute('linecinese');
-    section.style.display = linecinese > 0 ? 'block' : 'none';
+    if (linSection) {
+        const linecinese = calculateTotalAttribute('linecinese');
+        linSection.style.display = linecinese > 0 ? 'block' : 'none';
+    }
+    
+    // Adicionar classe especial se tiver bônus
+    const healthContainer = document.querySelector('.status-card#health-card');
+    const essenceContainer = document.querySelector('.status-card#essence-card');
+    
+    if (healthContainer) {
+        if (ficha.health.current > ficha.health.max) {
+            healthContainer.classList.add('over-max');
+        } else {
+            healthContainer.classList.remove('over-max');
+        }
+    }
+    
+    if (essenceContainer) {
+        if (ficha.essence.current > ficha.essence.max) {
+            essenceContainer.classList.add('over-max');
+        } else {
+            essenceContainer.classList.remove('over-max');
+        }
+    }
 }
 
 function updateLinGrades() {
     for (let i = 1; i <= 4; i++) {
         const attr = ficha.linAttributes[`attr${i}`] || { base: 0, mod: 0 };
         const total = attr.base + attr.mod;
-        document.getElementById(`lin-grade-${i}`).textContent = calculateLinGrade(total);
+        const gradeElement = document.getElementById(`lin-grade-${i}`);
+        if (gradeElement) gradeElement.textContent = calculateLinGrade(total);
     }
 }
 
 function updateGeneralReputation() {
     const total = Object.values(ficha.reputation).reduce((sum, val) => sum + val, 0);
-    document.getElementById('general-reputation').textContent = total;
-    
     const generalRep = document.getElementById('general-reputation');
-    if (total > 0) {
-        generalRep.style.color = 'var(--success)';
-    } else if (total < 0) {
-        generalRep.style.color = 'var(--danger)';
-    } else {
-        generalRep.style.color = 'var(--accent)';
+    
+    if (generalRep) {
+        generalRep.textContent = total;
+        
+        if (total > 0) {
+            generalRep.style.color = 'var(--success)';
+        } else if (total < 0) {
+            generalRep.style.color = 'var(--danger)';
+        } else {
+            generalRep.style.color = 'var(--accent)';
+        }
     }
 }
 
-// ========== FUNÇÕES DE SISTEMA ==========
+// ========== FUNÇÕES DE SISTEMA (COM BÔNUS TEMPORÁRIOS) ==========
+
 function changeHealth(action) {
     const input = document.getElementById('health-change-input');
-    const changeValue = parseInt(input.value) || 1;
+    const changeValue = parseInt(input?.value) || 1;
     
     if (action === 'add') {
         ficha.health.current += changeValue;
+        console.log(`Cura aplicada: ${changeValue}. Vida atual: ${ficha.health.current} / Máx Base: ${ficha.health.max}`);
     } else if (action === 'sub') {
         ficha.health.current -= changeValue;
+        console.log(`Dano aplicado: ${changeValue}. Vida atual: ${ficha.health.current} / Máx Base: ${ficha.health.max}`);
         
-        // Verificar dano crítico
+        // Verificar dano crítico (50% do máximo BASE)
         if (changeValue > ficha.health.max / 2) {
             ficha.health.current = 0;
-            alert("⚰️ VOCÊ TOMOU MAIS DA METADE DA SUA VIDA EM UM ÚNICO ATAQUE!\n\nESTADO: MORRENDO!");
+            alert("⚰️ VOCÊ TOMOU MAIS DA METADE DA SUA VIDA MÁXIMA EM UM ÚNICO ATAQUE!\n\nESTADO: MORRENDO!");
         }
     }
     
+    // Apenas garantir que não fique negativo
+    // PODE FICAR ACIMA DO MÁXIMO!
     if (ficha.health.current < 0) ficha.health.current = 0;
-    if (ficha.health.current > ficha.health.max) ficha.health.current = ficha.health.max;
     
-    document.getElementById('current-health').value = ficha.health.current;
-    renderCalculatedValues();
+    const currentHealthInput = document.getElementById('current-health');
+    if (currentHealthInput) currentHealthInput.value = ficha.health.current;
+    
+    updateCalculations();
 }
 
 function changeEssence(action) {
     const input = document.getElementById('essence-change-input');
-    const changeValue = parseInt(input.value) || 1;
+    const changeValue = parseInt(input?.value) || 1;
     
     if (action === 'add') {
         ficha.essence.current += changeValue;
+        console.log(`Essência restaurada: ${changeValue}. Essência atual: ${ficha.essence.current} / Máx Base: ${ficha.essence.max}`);
     } else if (action === 'sub') {
         ficha.essence.current -= changeValue;
+        console.log(`Essência consumida: ${changeValue}. Essência atual: ${ficha.essence.current} / Máx Base: ${ficha.essence.max}`);
     }
     
+    // Apenas garantir que não fique negativo
+    // PODE FICAR ACIMA DO MÁXIMO!
     if (ficha.essence.current < 0) ficha.essence.current = 0;
-    if (ficha.essence.current > ficha.essence.max) ficha.essence.current = ficha.essence.max;
     
-    document.getElementById('current-essence').value = ficha.essence.current;
-    renderCalculatedValues();
+    const currentEssenceInput = document.getElementById('current-essence');
+    if (currentEssenceInput) currentEssenceInput.value = ficha.essence.current;
+    
+    updateCalculations();
+}
+
+// ========== FUNÇÕES DE BÔNUS TEMPORÁRIOS ==========
+
+/**
+ * Aplica um bônus temporário de vida
+ * @param {number} amount - Quantidade de vida extra
+ * @param {string} source - Fonte do bônus (ex: "poção", "magia", "item")
+ */
+function addTemporaryHealth(amount, source = "bônus") {
+    const oldHealth = ficha.health.current;
+    ficha.health.current += amount;
+    
+    console.log(`${source}: +${amount} vida. ${oldHealth} → ${ficha.health.current}`);
+    showNotification(`+${amount} vida temporária (${source})`, 'success');
+    
+    updateCalculations();
+}
+
+/**
+ * Aplica um bônus temporário de essência
+ * @param {number} amount - Quantidade de essência extra
+ * @param {string} source - Fonte do bônus (ex: "poção", "magia", "item")
+ */
+function addTemporaryEssence(amount, source = "bônus") {
+    const oldEssence = ficha.essence.current;
+    ficha.essence.current += amount;
+    
+    console.log(`${source}: +${amount} essência. ${oldEssence} → ${ficha.essence.current}`);
+    showNotification(`+${amount} essência temporária (${source})`, 'success');
+    
+    updateCalculations();
+}
+
+/**
+ * Remove TODOS os bônus temporários, voltando ao máximo base
+ */
+function clearTemporaryBonuses() {
+    const hadBonusHealth = ficha.health.current > ficha.health.max;
+    const hadBonusEssence = ficha.essence.current > ficha.essence.max;
+    
+    // Reduzir para o máximo base se estiver acima
+    if (ficha.health.current > ficha.health.max) {
+        console.log(`Removendo bônus de vida: ${ficha.health.current} → ${ficha.health.max}`);
+        ficha.health.current = ficha.health.max;
+    }
+    
+    if (ficha.essence.current > ficha.essence.max) {
+        console.log(`Removendo bônus de essência: ${ficha.essence.current} → ${ficha.essence.max}`);
+        ficha.essence.current = ficha.essence.max;
+    }
+    
+    if (hadBonusHealth || hadBonusEssence) {
+        showNotification("Bônus temporários removidos", 'info');
+    }
+    
+    updateCalculations();
 }
 
 function applyAffinity() {
     if (!ficha.linAffinity) return;
     
-    const config = affinityMap[ficha.linAffinity];
+    const config = AFFINITY_MAP[ficha.linAffinity];
     
     // Resetar modificadores de afinidade
     for (let i = 1; i <= 4; i++) {
@@ -586,6 +695,7 @@ function applyAffinity() {
 }
 
 // ========== INVENTÁRIO ==========
+
 function updateInventorySlots() {
     const items = document.querySelectorAll('#inventory-container .inventory-item');
     let slotsUsed = 0;
@@ -600,17 +710,16 @@ function updateInventorySlots() {
     const capacity = calculateCapacity();
     const available = Math.max(0, capacity - slotsUsed);
     
-    document.getElementById('used-slots').textContent = slotsUsed;
-    document.getElementById('available-slots').textContent = available;
-    
-    // Verificar sobrepeso
-    isOverweight = slotsUsed > capacity;
+    const usedSlots = document.getElementById('used-slots');
+    const availableSlots = document.getElementById('available-slots');
     const warning = document.getElementById('overweight-warning');
     
-    if (isOverweight) {
-        warning.style.display = 'block';
-    } else {
-        warning.style.display = 'none';
+    if (usedSlots) usedSlots.textContent = slotsUsed;
+    if (availableSlots) availableSlots.textContent = available;
+    
+    isOverweight = slotsUsed > capacity;
+    if (warning) {
+        warning.style.display = isOverweight ? 'block' : 'none';
     }
     
     inventorySlotsUsed = slotsUsed;
@@ -618,6 +727,7 @@ function updateInventorySlots() {
 
 function addItem() {
     const container = document.getElementById('inventory-container');
+    if (!container) return;
     
     const itemDiv = document.createElement('div');
     itemDiv.className = 'inventory-item';
@@ -657,8 +767,10 @@ function addItem() {
 }
 
 // ========== HABILIDADES ==========
+
 function addAbility() {
     const container = document.getElementById('abilities-container');
+    if (!container) return;
     
     const abilityDiv = document.createElement('div');
     abilityDiv.className = 'ability-item';
@@ -684,56 +796,42 @@ function addAbility() {
 }
 
 // ========== FIREBASE INTEGRATION ==========
+
 async function saveToFirebase() {
     try {
-        // Obter dados do DOM
         getFichaFromDOM();
         
-        // Verificar autenticação
         if (!FirebaseService.isAuthenticated()) {
             const authResult = await showAuthDialog();
-            if (!authResult) {
-                saveToLocalStorage();
-                return;
-            }
+            if (!authResult) return;
         }
         
-        // Salvar no Firestore
         const result = await FirebaseService.saveFicha(ficha, currentCharacterId);
         
         if (result.success) {
             currentCharacterId = result.characterId;
             showNotification('✅ Ficha salva na nuvem!', 'success');
-            
-            // Backup local
-            saveToLocalStorage();
         } else {
             throw new Error(result.error);
         }
     } catch (error) {
         console.error('Erro ao salvar:', error);
         showNotification(`❌ Erro: ${error.message}`, 'error');
-        saveToLocalStorage(); // Fallback
     }
 }
 
 async function loadFromFirebase(characterId = null) {
     try {
-        // Verificar autenticação
         if (!FirebaseService.isAuthenticated()) {
             const authResult = await showAuthDialog();
-            if (!authResult) {
-                return;
-            }
+            if (!authResult) return;
         }
         
-        // Se não tem characterId, mostrar lista
         if (!characterId) {
             await showCharacterList();
             return;
         }
         
-        // Carregar ficha específica
         const result = await FirebaseService.loadFicha(characterId);
         
         if (result.success) {
@@ -753,7 +851,6 @@ async function showCharacterList() {
     const result = await FirebaseService.loadAllFichas();
     
     if (result.success && result.fichas.length > 0) {
-        // Criar modal
         const modal = document.createElement('div');
         modal.style.cssText = `
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -761,11 +858,11 @@ async function showCharacterList() {
             align-items: center; z-index: 10000;
         `;
         
-        let listHTML = result.fichas.map(ficha => `
-            <div class="character-item" style="padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; margin-bottom: 10px; border-radius: 8px; background: rgba(255,255,255,0.05);" data-id="${ficha.id}">
-                <div style="font-weight: bold; color: var(--accent);">${ficha.characterName || 'Sem nome'}</div>
+        let listHTML = result.fichas.map(f => `
+            <div class="character-item" style="padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; margin-bottom: 10px; border-radius: 8px; background: rgba(255,255,255,0.05);" data-id="${f.id}">
+                <div style="font-weight: bold; color: var(--accent);">${f.characterName || 'Sem nome'}</div>
                 <div style="font-size: 0.8rem; color: var(--text-secondary);">
-                    Nível ${ficha.level || 1} • Criado: ${ficha.createdAt ? new Date(ficha.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
+                    Nível ${f.level || 1} • Criado: ${f.createdAt ? new Date(f.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
                 </div>
             </div>
         `).join('');
@@ -784,7 +881,6 @@ async function showCharacterList() {
         
         document.body.appendChild(modal);
         
-        // Event listeners
         modal.querySelectorAll('.character-item').forEach(item => {
             item.addEventListener('click', () => {
                 const characterId = item.getAttribute('data-id');
@@ -793,9 +889,12 @@ async function showCharacterList() {
             });
         });
         
-        document.getElementById('close-list').addEventListener('click', () => {
-            document.body.removeChild(modal);
-        });
+        const closeBtn = document.getElementById('close-list');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+        }
     } else {
         showNotification('Nenhum personagem encontrado', 'info');
     }
@@ -835,31 +934,6 @@ async function showAuthDialog() {
         
         document.body.appendChild(modal);
         
-        // Event listeners
-        document.getElementById('auth-login').addEventListener('click', async () => {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const result = await FirebaseService.login(email, password);
-            handleAuthResult(result);
-        });
-        
-        document.getElementById('auth-register').addEventListener('click', async () => {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const result = await FirebaseService.register(email, password);
-            handleAuthResult(result);
-        });
-        
-        // document.getElementById('auth-google').addEventListener('click', async () => {
-        //     const result = await FirebaseService.loginWithGoogle();
-        //     handleAuthResult(result);
-        // });
-        
-        document.getElementById('auth-cancel').addEventListener('click', () => {
-            document.body.removeChild(modal);
-            resolve(false);
-        });
-        
         function handleAuthResult(result) {
             if (result.success) {
                 document.body.removeChild(modal);
@@ -867,9 +941,40 @@ async function showAuthDialog() {
                 resolve(true);
             } else {
                 const errorEl = document.getElementById('auth-error');
-                errorEl.textContent = result.error;
-                errorEl.style.display = 'block';
+                if (errorEl) {
+                    errorEl.textContent = result.error;
+                    errorEl.style.display = 'block';
+                }
             }
+        }
+        
+        const loginBtn = document.getElementById('auth-login');
+        const registerBtn = document.getElementById('auth-register');
+        const cancelBtn = document.getElementById('auth-cancel');
+        
+        if (loginBtn) {
+            loginBtn.addEventListener('click', async () => {
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-password').value;
+                const result = await FirebaseService.login(email, password);
+                handleAuthResult(result);
+            });
+        }
+        
+        if (registerBtn) {
+            registerBtn.addEventListener('click', async () => {
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-password').value;
+                const result = await FirebaseService.register(email, password);
+                handleAuthResult(result);
+            });
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                document.body.removeChild(modal);
+                resolve(false);
+            });
         }
     });
 }
@@ -879,46 +984,14 @@ async function logout() {
     if (result.success) {
         currentCharacterId = null;
         showNotification('Logout realizado', 'success');
-        document.getElementById('logout-btn').style.display = 'none';
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.style.display = 'none';
     }
 }
 
-// ========== LOCALSTORAGE (fallback) ==========
-// function saveToLocalStorage() {
-//     getFichaFromDOM();
-    
-//     // Usar o ID do personagem no nome do backup
-//     const backupKey = currentCharacterId 
-//         ? `ficha_backup_${currentCharacterId}`
-//         : 'ficha_backup_new';
-    
-//     localStorage.setItem(backupKey, JSON.stringify(ficha));
-//     console.log("Backup salvo para:", backupKey);
-// }
-
-// function loadFromLocalStorage() {
-//     // Tentar carregar backup do personagem atual
-//     const backupKey = currentCharacterId 
-//         ? `ficha_backup_${currentCharacterId}`
-//         : 'ficha_backup_new';
-    
-//     const saved = localStorage.getItem(backupKey);
-//     if (saved) {
-//         const fichaData = JSON.parse(saved);
-        
-//         // IMPORTANTE: Só carregar se for o MESMO personagem
-//         if (!currentCharacterId || fichaData.userId === FirebaseService.getCurrentUserId()) {
-//             renderFicha(fichaData);
-//             showNotification('Ficha restaurada do backup local', 'info');
-//             return true;
-//         }
-//     }
-//     return false; // Não encontrou backup
-// }
-
 // ========== UTILITIES ==========
+
 function showNotification(message, type = 'info') {
-    // Remove notificação anterior se existir
     const existing = document.querySelector('.notification');
     if (existing) existing.remove();
     
@@ -942,40 +1015,14 @@ function showNotification(message, type = 'info') {
 }
 
 // ========== INICIALIZAÇÃO ==========
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar peculiaridades
-    initPeculiarities();
-    
-    // Configurar event listeners
-    setupEventListeners();
-    
-    // Inicializar Firebase auth state
-    FirebaseService.onAuthStateChanged((user) => {
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.style.display = user ? 'block' : 'none';
-        }
-        
-        if (user) {
-            console.log('Usuário autenticado:', user.email);
-        }
-    });
-    
-    // Renderizar estado inicial
-    updateCalculations();
-    updateInventorySlots();
-    
-    // Tentar carregar do localStorage
-    setTimeout(() => {
-        // loadFromLocalStorage();
-    }, 500);
-});
 
 function initPeculiarities() {
     const container = document.getElementById('peculiarities-container');
+    if (!container) return;
+    
     container.innerHTML = '';
     
-    peculiaritiesList.forEach(pec => {
+    PECULIARITIES.forEach(pec => {
         const div = document.createElement('div');
         div.className = 'peculiarity-item';
         div.innerHTML = `
@@ -992,6 +1039,10 @@ function initPeculiarities() {
 }
 
 function setupEventListeners() {
+    if (listenersConfigured) return;
+    
+    console.log("Configurando event listeners...");
+    
     // Atributos principais
     document.querySelectorAll('.attr-input').forEach(input => {
         input.addEventListener('input', updateCalculations);
@@ -1012,37 +1063,50 @@ function setupEventListeners() {
     });
     
     // Afinidade
-    document.getElementById('lin-affinity').addEventListener('change', function() {
-        ficha.linAffinity = this.value;
-        if (ficha.linAffinity) {
-            applyAffinity();
-        }
-    });
+    const affinitySelect = document.getElementById('lin-affinity');
+    if (affinitySelect) {
+        affinitySelect.addEventListener('change', function() {
+            ficha.linAffinity = this.value;
+            if (ficha.linAffinity) applyAffinity();
+        });
+    }
     
     // Estado do Fio
-    document.getElementById('thread-state').addEventListener('change', function() {
-        const tenseContainer = document.getElementById('tense-state-container');
-        tenseContainer.style.display = this.value === 'tense' ? 'block' : 'none';
-    });
+    const threadStateSelect = document.getElementById('thread-state');
+    if (threadStateSelect) {
+        threadStateSelect.addEventListener('change', function() {
+            const tenseContainer = document.getElementById('tense-state-container');
+            if (tenseContainer) {
+                tenseContainer.style.display = this.value === 'tense' ? 'block' : 'none';
+            }
+        });
+    }
     
     // Vida atual
-    document.getElementById('current-health').addEventListener('input', function() {
-        ficha.health.current = parseInt(this.value) || 0;
-        updateCalculations();
-    });
+    const currentHealthInput = document.getElementById('current-health');
+    if (currentHealthInput) {
+        currentHealthInput.addEventListener('input', function() {
+            ficha.health.current = parseInt(this.value) || 0;
+            updateCalculations();
+        });
+    }
     
     // Essência atual
-    document.getElementById('current-essence').addEventListener('input', function() {
-        ficha.essence.current = parseInt(this.value) || 0;
-        updateCalculations();
-    });
+    const currentEssenceInput = document.getElementById('current-essence');
+    if (currentEssenceInput) {
+        currentEssenceInput.addEventListener('input', function() {
+            ficha.essence.current = parseInt(this.value) || 0;
+            updateCalculations();
+        });
+    }
     
     // Sliders de reputação
     document.querySelectorAll('.reputation-slider').forEach(slider => {
         slider.addEventListener('input', function() {
             const repId = this.id.replace('rep-', '');
             ficha.reputation[repId] = parseInt(this.value) || 0;
-            document.getElementById(`${this.id}-value`).textContent = this.value;
+            const valueDisplay = document.getElementById(`${this.id}-value`);
+            if (valueDisplay) valueDisplay.textContent = this.value;
             updateGeneralReputation();
         });
     });
@@ -1050,36 +1114,108 @@ function setupEventListeners() {
     // Inputs de bônus
     const bonusInputs = ['armor', 'defense-bonus', 'resistance-bonus', 'essence-bonus', 'level'];
     bonusInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', updateCalculations);
+        const input = document.getElementById(id);
+        if (input) input.addEventListener('input', updateCalculations);
     });
     
-    // Botões de saúde
-    document.querySelectorAll('.health-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.textContent === '+' ? 'add' : 'sub';
-            if (this.parentElement.classList.contains('health-buttons')) {
-                const type = this.parentElement.parentElement.querySelector('.health-input-container input').id.includes('health') ? 'health' : 'essence';
-                if (type === 'health') changeHealth(action);
-                else changeEssence(action);
-            }
-        });
-    });
+    listenersConfigured = true;
 }
 
-// Adicionar CSS para animação da notificação
+function initAfterLoad() {
+    initPeculiarities();
+    setupEventListeners();
+    updateCalculations();
+    updateInventorySlots();
+    
+    if (ficha.linAffinity) {
+        const affinitySelect = document.getElementById('lin-affinity');
+        if (affinitySelect) affinitySelect.value = ficha.linAffinity;
+        applyAffinity();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
+    const characterIdToLoad = localStorage.getItem('currentCharacterId');
+    
+    localStorage.removeItem('isNewCharacter');
+    
+    if (characterIdToLoad && !isNewCharacter) {
+        currentCharacterId = characterIdToLoad;
+        
+        FirebaseService.onAuthStateChanged(async (user) => {
+            if (user) {
+                const result = await FirebaseService.loadFicha(characterIdToLoad);
+                if (result.success) {
+                    renderFicha(result.data);
+                    showNotification(`Personagem "${result.data.characterName}" carregado!`, 'success');
+                    initAfterLoad();
+                }
+            }
+        });
+    } else {
+        resetFicha();
+        renderFicha(ficha);
+        showNotification("Nova ficha criada. Preencha os dados!", 'info');
+        initAfterLoad();
+    }
+    
+    FirebaseService.onAuthStateChanged((user) => {
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.style.display = user ? 'block' : 'none';
+        
+        if (user) console.log('Usuário autenticado:', user.email);
+    });
+    
+    updateCalculations();
+    updateInventorySlots();
+});
+
+// ========== ADICIONAR CSS PARA ANIMAÇÕES ==========
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+    
+    @keyframes glow {
+        0% { box-shadow: 0 0 5px var(--accent); }
+        50% { box-shadow: 0 0 20px var(--accent); }
+        100% { box-shadow: 0 0 5px var(--accent); }
+    }
+    
+    .over-max {
+        animation: glow 2s infinite;
+        border-color: var(--accent) !important;
+    }
+    
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 10001;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
 `;
 document.head.appendChild(style);
 
-// Exportar para uso global (se necessário)
+// ========== EXPORTAR FUNÇÕES PARA USO GLOBAL ==========
 window.ficha = ficha;
 window.FirebaseService = FirebaseService;
 window.saveToFirebase = saveToFirebase;
 window.loadFromFirebase = loadFromFirebase;
 window.showCharacterList = showCharacterList;
 window.logout = logout;
+window.addTemporaryHealth = addTemporaryHealth;
+window.addTemporaryEssence = addTemporaryEssence;
+window.clearTemporaryBonuses = clearTemporaryBonuses;

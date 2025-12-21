@@ -144,7 +144,6 @@ header::after {
 }
 
 .title::before {
-    content: '';
     position: absolute;
     top: 50%;
     left: 0;
@@ -170,7 +169,6 @@ header::after {
 }
 
 .title::after::after {
-    content: '';
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -418,7 +416,7 @@ header::after {
 
 .health-bar {
     height: 100%;
-    background: linear-gradient(90deg, #f91919, #be1300);
+    background: linear-gradient(90deg, var(--success), #26c281, #1eae61);
     border-radius: 12px;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 0%;
