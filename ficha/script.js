@@ -235,7 +235,7 @@ function resetFicha() {
     
     // Limpar ID atual
     currentCharacterId = null;
-    localStorage.removeItem('currentCharacterId');
+    // localStorage.removeItem('currentCharacterId');
     
     console.log("Ficha resetada para valores padrão!");
 }
@@ -1135,10 +1135,10 @@ function initAfterLoad() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
-    const characterIdToLoad = localStorage.getItem('currentCharacterId');
+    // const isNewCharacter = localStorage.getItem('isNewCharacter') === 'true';
+    // const characterIdToLoad = localStorage.getItem('currentCharacterId');
     
-    localStorage.removeItem('isNewCharacter');
+    // localStorage.removeItem('isNewCharacter');
     
     if (characterIdToLoad && !isNewCharacter) {
         currentCharacterId = characterIdToLoad;
