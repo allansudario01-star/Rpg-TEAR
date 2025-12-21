@@ -14,7 +14,6 @@ const FirebaseService = {
         // Configurar persistência
         this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         
-        console.log("FirebaseService inicializado");
     },
     
     // ========== AUTENTICAÇÃO ==========
@@ -44,15 +43,15 @@ const FirebaseService = {
         }
     },
     
-    async loginWithGoogle() {
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const result = await this.auth.signInWithPopup(provider);
-            return { success: true, user: result.user };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    },
+    // async loginWithGoogle() {
+    //     try {
+    //         const provider = new firebase.auth.GoogleAuthProvider();
+    //         const result = await this.auth.signInWithPopup(provider);
+    //         return { success: true, user: result.user };
+    //     } catch (error) {
+    //         return { success: false, error: error.message };
+    //     }
+    // },
     
     async logout() {
         try {
@@ -108,7 +107,6 @@ const FirebaseService = {
                 data: fichaToSave
             };
         } catch (error) {
-            console.error("Erro ao salvar:", error);
             return { success: false, error: error.message };
         }
     },
@@ -128,7 +126,6 @@ const FirebaseService = {
                 return { success: false, error: "Ficha não encontrada" };
             }
         } catch (error) {
-            console.error("Erro ao carregar:", error);
             return { success: false, error: error.message };
         }
     },
@@ -152,7 +149,6 @@ const FirebaseService = {
             
             return { success: true, fichas };
         } catch (error) {
-            console.error("Erro ao carregar todas:", error);
             return { success: false, error: error.message };
         }
     },
@@ -167,7 +163,6 @@ const FirebaseService = {
             await this.db.collection('users').doc(userId).collection('fichas').doc(characterId).delete();
             return { success: true };
         } catch (error) {
-            console.error("Erro ao deletar:", error);
             return { success: false, error: error.message };
         }
     }

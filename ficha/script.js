@@ -832,7 +832,6 @@ async function saveToFirebase() {
         getFichaFromDOM();
         
         if (!FirebaseService.isAuthenticated()) {
-            console.log("Usuário não autenticado, abrindo diálogo...");
             const authResult = await showAuthDialog();
             if (!authResult) {
                 showNotification('Salvamento cancelado', 'warning');
@@ -844,7 +843,6 @@ async function saveToFirebase() {
         try {
             localStorage.setItem('fichaBackup', JSON.stringify(ficha));
         } catch (e) {
-            console.log("Erro ao salvar backup local:", e);
         }
         
         const result = await FirebaseService.saveFicha(ficha, currentCharacterId);
@@ -858,13 +856,11 @@ async function saveToFirebase() {
             throw new Error(result.error);
         }
     } catch (error) {
-        console.error('Erro ao salvar:', error);
         showNotification(`❌ Erro: ${error.message}`, 'error');
         
         try {
             localStorage.setItem('fichaEmergencyBackup', JSON.stringify(ficha));
         } catch (e) {
-            console.error("Não foi possível salvar backup:", e);
         }
     }
 }
@@ -896,7 +892,6 @@ async function loadFromFirebase(characterId = null) {
             throw new Error(result.error);
         }
     } catch (error) {
-        console.error('Erro ao carregar:', error);
         showNotification(`❌ Erro: ${error.message}`, 'error');
     }
 }
@@ -965,7 +960,6 @@ async function showCharacterList() {
             showNotification('Nenhum personagem encontrado', 'info');
         }
     } catch (error) {
-        console.error('Erro ao mostrar lista:', error);
         showNotification(`❌ Erro: ${error.message}`, 'error');
     }
 }
@@ -1308,7 +1302,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (user) {
-            console.log("Usuário autenticado:", user.email);
             
             if (characterIdToLoad && !isNewCharacter) {
                 currentCharacterId = characterIdToLoad;
@@ -1325,7 +1318,6 @@ document.addEventListener('DOMContentLoaded', function() {
             initAfterLoad();
             
         } else {
-            console.log("Usuário não autenticado");
             
             initAfterLoad();
             
@@ -1349,7 +1341,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setTimeout(() => {
         if (!listenersConfigured) {
-            console.log("Inicializando interface após timeout...");
             initAfterLoad();
         }
     }, 1500);
