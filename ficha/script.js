@@ -1017,7 +1017,6 @@ function saveInventoryLocally() {
         localStorage.setItem('inventoryBackup', JSON.stringify(inventoryData));
         return true;
     } catch (error) {
-        console.error('Erro ao salvar inventário localmente:', error);
         return false;
     }
 }
@@ -1042,7 +1041,6 @@ function saveAbilitiesLocally() {
         localStorage.setItem('abilitiesBackup', JSON.stringify(abilitiesData));
         return true;
     } catch (error) {
-        console.error('Erro ao salvar habilidades localmente:', error);
         return false;
     }
 }
@@ -1092,9 +1090,7 @@ async function saveToFirebase() {
                 timestamp: new Date().toISOString()
             };
             localStorage.setItem('fullCharacterBackup', JSON.stringify(fullBackup));
-            console.log("Backup completo salvo localmente");
         } catch (e) {
-            console.error("Não foi possível salvar backup completo:", e);
         }
         
         try {
