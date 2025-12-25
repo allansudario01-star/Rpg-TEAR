@@ -3,32 +3,32 @@
 // ========== CONSTANTES E CONFIGURAÇÕES ==========
 
 const PECULIARITIES = [
-    { id: 'weapon-handling', name: 'Manuseio de Armas', attr: 'dexterity' },
-    { id: 'religion', name: 'Religião', attr: 'intelligence' },
-    { id: 'lin', name: 'LIN (Controle de Nó)', attr: 'linecinese' },
-    { id: 'survival', name: 'Sobrevivência', attr: 'intelligence' },
-    { id: 'diplomacy', name: 'Diplomacia', attr: 'spirit' },
-    { id: 'stealth', name: 'Furtividade', attr: 'dexterity' },
-    { id: 'strategy', name: 'Estratégia', attr: 'intelligence' },
-    { id: 'fencing', name: 'Esgrima', attr: 'dexterity' },
-    { id: 'archery', name: 'Arquearia', attr: 'dexterity' },
-    { id: 'fortitude', name: 'Fortitude', attr: 'strength' },
-    { id: 'acrobatics', name: 'Acrobacia', attr: 'dexterity' },
-    { id: 'persuasion', name: 'Persuasão', attr: 'spirit' },
-    { id: 'reflex', name: 'Reflexo', attr: 'dexterity' },
-    { id: 'history', name: 'História', attr: 'intelligence' },
-    { id: 'deception', name: 'Enganação', attr: 'spirit' },
-    { id: 'perception', name: 'Percepção', attr: 'intelligence' },
-    { id: 'investigation', name: 'Investigação', attr: 'intelligence' },
-    { id: 'fight', name: 'Luta', attr: 'strength' },
-    { id: 'athletics', name: 'Atletismo', attr: 'strength' },
-    { id: 'medicine', name: 'Medicina', attr: 'intelligence' },
-    { id: 'crime', name: 'Crime', attr: 'dexterity' },
-    { id: 'thread-sensitivity', name: 'Sensibilidade ao Fio', attr: 'linecinese' },
-    { id: 'intimidation', name: 'Intimidação', attr: 'spirit' },
-    { id: 'craft', name: 'Ofício', attr: 'spirit' },
-    { id: 'intuition', name: 'Intuição', attr: 'intelligence' },
-    { id: 'will', name: 'Vontade', attr: 'spirit' }
+    { id: 'weapon-handling', name: '(DES) Manuseio de Armas', attr: 'dexterity' },
+    { id: 'religion', name: '(INT) Religião', attr: 'intelligence' },
+    { id: 'lin', name: '(LIN) Controle do Nó', attr: 'linecinese' },
+    { id: 'survival', name: '(INT) Sobrevicência', attr: 'intelligence' },
+    { id: 'diplomacy', name: '(ESP) Diplomacia', attr: 'spirit' },
+    { id: 'stealth', name: '(DES) Furtividade', attr: 'dexterity' },
+    { id: 'strategy', name: '(INT) Estratégia', attr: 'intelligence' },
+    { id: 'fencing', name: '(FOR ou DES) Esgrima', attr: 'dexterity' },
+    { id: 'archery', name: '(DES) Arquearia', attr: 'dexterity' },
+    { id: 'fortitude', name: '(FOR) Fortitude', attr: 'strength' },
+    { id: 'acrobatics', name: '(DES) Acrobacia', attr: 'dexterity' },
+    { id: 'persuasion', name: '(ESP) Persuasão', attr: 'spirit' },
+    { id: 'reflex', name: '(DES) Reflexo', attr: 'dexterity' },
+    { id: 'history', name: '(INT) História', attr: 'intelligence' },
+    { id: 'deception', name: '(ESP) Enganação', attr: 'spirit' },
+    { id: 'perception', name: '(INT) Percepção', attr: 'intelligence' },
+    { id: 'investigation', name: '(INT) Investigação', attr: 'intelligence' },
+    { id: 'fight', name: '(FOR) Luta', attr: 'strength' },
+    { id: 'athletics', name: '(FOR) Atletismo', attr: 'strength' },
+    { id: 'medicine', name: '(INT) Medicina', attr: 'intelligence' },
+    { id: 'crime', name: '(DES) Crime', attr: 'dexterity' },
+    { id: 'thread-sensitivity', name: '(LIN) Sensibilidade ao Fio', attr: 'linecinese' },
+    { id: 'intimidation', name: '(ESP) Intimidação', attr: 'spirit' },
+    { id: 'craft', name: '(ESP) Ofício', attr: 'spirit' },
+    { id: 'intuition', name: '(INT) Intuição', attr: 'intelligence' },
+    { id: 'will', name: '(ESP) Vontade', attr: 'spirit' }
 ];
 
 const AFFINITY_MAP = {
@@ -966,16 +966,16 @@ function addAbilityToDOM(abilityData = null) {
                     <option value="utility" ${ability.type === 'utility' ? 'selected' : ''}>Utilitária</option>
                 </select>
             </div>
-            <div>
-                <button class="btn-remove" onclick="removeAbility(this)" title="Remover habilidade" style="padding: 10px 15px; background: var(--danger); color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    <i class="fas fa-trash"></i> Remover
-                </button>
-            </div>
         </div>
         <div>
             <textarea class="ability-description" placeholder="Descrição da habilidade (efeitos, custo, duração, etc.)" 
                       rows="3" style="width: 100%; padding: 10px; background: var(--secondary); border: 1px solid var(--border); color: var(--text); border-radius: 5px;">${ability.description || ''}</textarea>
         </div>
+        <div>
+                <button class="btn-remove" onclick="removeAbility(this)" title="Remover habilidade">
+                    <i class="fas fa-trash"></i> Remover
+                </button>
+            </div>
     `;
     
     container.appendChild(abilityDiv);
