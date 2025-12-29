@@ -973,7 +973,7 @@ function addAbilityToDOM(abilityData = null) {
         </div>
         <div>
                 <button class="btn-remove" onclick="removeAbility(this)" title="Remover habilidade">
-                    <i class="fas fa-trash"></i> Remover
+                    <i class="fas fa-trash"></i> X
                 </button>
             </div>
     `;
