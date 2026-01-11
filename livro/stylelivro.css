@@ -1,0 +1,1459 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap');
+
+/* ========== VARIÁVEIS E ESTILOS GLOBAIS ATUALIZADOS ========== */
+:root {
+    --color-primary: #000000;
+    --color-secondary: #0a0a0a;
+    --color-accent: #b30000; /* Vermelho mais sóbrio */
+    --color-accent-dark: #800000;
+    --color-accent-light: #d92626;
+    --color-paper: #ffffff;
+    --color-paper-aged: #f5f5f5;
+    --color-paper-dark: #111111;
+    --color-ink: #1a1a1a; /* Preto mais suave para leitura */
+    --color-ink-light: #444444;
+    --color-table-bg: #f8f8f8;
+    --color-table-border: #c9c9c9;
+    --color-table-header: #f0f0f0;
+    
+    --font-title: 'Cinzel', serif;
+    --font-heading: 'Rapscallion', cursive;
+    --font-body: 'Crimson Text', serif;
+    --font-size-base: 18px; /* Reduzido para melhor legibilidade */
+    --line-height: 1.8; /* Aumentado para melhor legibilidade */
+    
+    --page-width: 210mm;
+    --page-height: 297mm;
+    --page-padding: 40px 50px;
+    
+    --text-justify: justify;
+    --text-hyphens: auto;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+    color: var(--color-ink);
+    background: #000000;
+    overflow-x: hidden;
+    position: relative;
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+}
+
+/* Melhorias na tipografia para leitura */
+p, li, td {
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+    margin-bottom: 1.2rem;
+    text-rendering: optimizeLegibility;
+    font-variant-ligatures: common-ligatures;
+}
+
+h1, h2, h3, h4 {
+    text-rendering: optimizeLegibility;
+}
+
+.im-fell-english-sc-regular {
+  font-family: "IM Fell English SC", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.patrick-hand-sc-regular {
+  font-family: "Patrick Hand SC", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.im-fell-english-regular {
+  font-family: "IM Fell English", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ========== ESTRUTURA DO LIVRO ========== */
+.book-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.95);
+    background: white;
+}
+
+.page {
+    min-height: var(--page-height);
+    position: relative;
+    padding: var(--page-padding);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    page-break-after: always;
+    text-align: var(--text-justify);
+}
+
+/* Tipos de páginas COM IMAGENS */
+.page-cover {
+    background-image: url('Capa_Livro_Tear.jpg');
+    background-color: #000;
+    background-size: 100% 100%;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+/* CAPA APENAS COM SÍMBOLO */
+.cover-content {
+    position: relative;
+    z-index: 2;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.cover-symbol {
+    width: 700px;
+    height: 700px;
+    background-image: url('LOGO_TEAR_sembg.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.3));
+}
+
+/* Remove qualquer texto da capa */
+.cover-content > *:not(.cover-symbol) {
+    display: none !important;
+}
+
+.page-black {
+    background-image: url('Pagina_preta.jpg');
+    background-color: var(--color-paper-dark);
+    background-size: cover;
+    color: #f0f0f0;
+    position: relative;
+}
+
+.page-white {
+    background-image: url('Paginas_Brancas_Padrão.jpg');
+    background-color: var(--color-paper);
+    background-size: cover;
+    color: var(--color-ink);
+    position: relative;
+}
+
+.page-transition {
+    background-image: url('Imagem_Transição_Fios_Vermelhos.jpg');
+    background-color: var(--color-paper-dark);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #ffffff;
+}
+
+/* Overlay para melhorar legibilidade */
+.page-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.page-white .page-overlay {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.page-transition .page-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Conteúdo sobre as imagens */
+.page-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    text-align: var(--text-justify);
+}
+
+/* ========== PÁGINA PRETA - APRESENTAÇÃO ========== */
+.presentation-text {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    line-height: var(--line-height);
+    padding: 30px 40px;
+    position: relative;
+    z-index: 2;
+    text-align: var(--text-justify);
+    column-count: 2;
+    column-gap: 60px;
+    column-rule: 1px solid rgba(179, 0, 0, 0.2);
+    color: #f5f5f5;
+}
+
+.presentation-text p {
+    margin-bottom: 1.8rem;
+    position: relative;
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+    orphans: 3;
+    widows: 3;
+}
+
+.presentation-text strong {
+    color: var(--color-accent-light);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.presentation-text em {
+    color: #ff6666;
+    font-style: italic;
+}
+
+/* Efeito de texto distorcido */
+.distorted-text {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    color: var(--color-accent-light);
+    text-align: center;
+    margin: 30px 0 50px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    letter-spacing: 2px;
+    position: relative;
+    padding: 15px 0;
+    border-top: 2px solid rgba(179, 0, 0, 0.4);
+    border-bottom: 2px solid rgba(179, 0, 0, 0.4);
+}
+
+/* ========== Sumário ========== */
+
+.quicksand {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.page-toc {
+    background-image: url('Paginas_Brancas_Padrão.jpg');
+    background-color: #f5f1e8;
+    background-size: cover;
+    color: #1a1a1a;
+    position: relative;
+    font-family:"Patrick Hand SC", cursive;
+}
+
+/* Textura de papel envelhecido */
+.page-toc::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.02) 0%, transparent 50%),
+        linear-gradient(to bottom, transparent 95%, rgba(0, 0, 0, 0.02) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Manchas de tinta */
+.page-toc::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" opacity="0.02"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="400" height="400" filter="url(%23noise)"/></svg>'),
+        radial-gradient(ellipse at 10% 90%, rgba(0,0,0,0.02) 0%, transparent 20%),
+        radial-gradient(ellipse at 90% 10%, rgba(0,0,0,0.02) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: multiply;
+}
+
+.page-toc .page-content {
+    position: relative;
+    z-index: 2;
+    padding: 60px 50px;
+    height: 100%;
+    text-align: left;
+}
+
+/* Cabeçalho do sumário */
+.toc-header {
+    text-align: center;
+    margin-bottom: 70px;
+    padding-bottom: 30px;
+    position: relative;
+}
+
+.toc-header::after {
+    content: '';
+    position: absolute;
+    bottom: 50px;
+    left: -40%;
+    right: 15%;
+    height: 6px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        #1a1a1a 20%, 
+        #1a1a1a 80%, 
+        transparent);
+}
+
+.toc-title {
+    font-family: 'cinzel';
+    font-size: 4.2rem;
+    color: #1a1a1a;
+    margin-bottom: 0px;
+    letter-spacing: 1.5px;
+    text-transform: none;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    text-align: justify;
+}
+
+.toc-subtitle {
+    font-family: 'Cinzel';
+    font-size: 1.1rem;
+    color: #444444;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* Container de duas colunas estilo livro */
+.toc-container {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 110px;
+    position: relative;
+    font-size: 1.4rem;
+    line-height: 1.7;
+    bottom: 40px;
+}
+
+/* Linha divisória sutil entre colunas */
+.toc-container::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    bottom: -20px;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, 
+        transparent, 
+        rgba(26, 26, 26, 0.15) 10%, 
+        rgba(26, 26, 26, 0.15) 90%, 
+        transparent);
+    transform: translateX(-50%);
+}
+
+/* Títulos das seções */
+.toc-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.9rem;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.3);
+    font-weight: 600;
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.toc-section-title::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: #1a1a1a;
+}
+
+/* Números dos capítulos com estilo antigo */
+.toc-chapter-number {
+    font-family: 'Cinzel', cursive;
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    opacity: 0.9;
+}
+
+/* Lista de tópicos */
+.toc-list {
+    list-style-type: none;
+    margin-left: 5px;
+}
+
+.toc-item {
+    margin-bottom: 10px;
+    padding-left: 18px;
+    position: relative;
+    color: #1a1a1a;
+}
+
+/* Marcador estilo ponto de pena */
+.toc-item::before {
+    content: '❖';
+    position: absolute;
+    left: 0;
+    color: #1a1a1a;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    top: 7px;
+}
+
+.toc-item a {
+    color: #1a1a1a;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+    font-weight: 500;
+}
+
+.toc-item a:hover {
+    border-bottom: 1px solid #1a1a1a;
+    transform: translateX(3px);
+}
+
+/* Subtópicos (para as classes) */
+.toc-subitems {
+    list-style-type: none;
+    margin-top: 8px;
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.toc-subitem {
+    margin-bottom: 5px;
+    padding-left: 15px;
+    position: relative;
+    font-size: 0.95rem;
+    color: #444444;
+}
+
+/* Marcador diferente para subtópicos */
+.toc-subitem::before {
+    content: '※';
+    position: absolute;
+    left: 0;
+    color: #666666;
+}
+
+.toc-subitem a {
+    color: #444444;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.toc-subitem a:hover {
+    color: #1a1a1a;
+    border-bottom: 1px solid #444444;
+}
+
+/* Seções que você vai preencher depois */
+.toc-placeholder {
+    color: #666666;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* Linhas de guia sutis (como papel pautado) */
+.toc-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 29px,
+        rgba(26, 26, 26, 0.02) 29px,
+        rgba(26, 26, 26, 0.02) 30px
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .toc-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .toc-container::before {
+        display: none;
+    }
+    
+    .toc-title {
+        font-size: 2.5rem;
+    }
+    
+    .page-toc .page-content {
+        padding: 40px 30px;
+    }
+}
+
+@media print {
+    .page-toc {
+        background: #fff !important;
+    }
+    
+    .toc-item a:hover {
+        border-bottom: none;
+        transform: none;
+    }
+}
+
+
+
+/* ========== CONTEÚDO PRINCIPAL ========== */
+.section-container {
+    padding: 40px 35px;
+    position: relative;
+    z-index: 2;
+    min-height: calc(var(--page-height) - 80px);
+    display: flex;
+    flex-direction: column;
+    text-align: var(--text-justify);
+}
+
+.section-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--color-accent);
+    position: relative;
+    text-align: left;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    color: var(--color-accent-dark);
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    letter-spacing: 1px;
+}
+
+.section-subtitle {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+    color: var(--color-ink-light);
+    font-style: italic;
+    font-weight: 600;
+}
+
+.section-icon {
+    position: absolute;
+    right: 0;
+    bottom: 15px;
+    color: var(--color-accent);
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Template de conteúdo */
+.content-template {
+    background: linear-gradient(145deg, #ffffff, #fafafa);
+    border-radius: 3px;
+    padding: 28px;
+    margin-bottom: 35px;
+    border: 1px solid var(--color-table-border);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--color-accent);
+    text-align: var(--text-justify);
+}
+
+.content-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--color-accent), 
+        transparent);
+}
+
+.template-title {
+    font-family: var(--font-title);
+    font-size: 1.7rem;
+    color: var(--color-accent-dark);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(179, 0, 0, 0.25);
+    text-align: left;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.template-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-ink-light);
+    margin-bottom: 22px;
+    font-style: italic;
+    text-align: left;
+}
+
+.template-content {
+    font-size: 1.05rem;
+    line-height: var(--line-height);
+    color: var(--color-ink);
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+}
+
+.template-content h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    margin: 1.5rem 0 0.8rem;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(179, 0, 0, 0.15);
+    text-align: left;
+}
+
+.template-content p {
+    margin-bottom: 1.2rem;
+}
+
+/* ========== TABELAS RPG MELHORADAS ========== */
+.rpg-table {
+    margin: 2.8rem 0;
+    border: 2px solid var(--color-accent);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    background: var(--color-table-bg);
+    color: var(--color-ink);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, 
+        var(--color-accent-dark), 
+        var(--color-accent));
+    color: white;
+    padding: 1.4rem 2rem;
+    position: relative;
+    z-index: 1;
+    border-bottom: 2px solid var(--color-accent-dark);
+}
+
+.table-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+}
+
+.table-title h3 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.table-title p {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+.table-icon {
+    font-size: 1.8rem;
+    opacity: 0.8;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+    z-index: 1;
+    background: white;
+    font-size: 1.05rem;
+}
+
+th {
+    background: linear-gradient(to bottom, 
+        rgba(179, 0, 0, 0.2), 
+        rgba(179, 0, 0, 0.1));
+    font-family: var(--font-title);
+    font-weight: 700;
+    text-align: left;
+    padding: 1.1rem 2rem;
+    border-bottom: 2px solid var(--color-accent);
+    color: var(--color-accent-dark);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    position: relative;
+}
+
+th::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--color-accent), 
+        transparent);
+}
+
+td {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(179, 0, 0, 0.12);
+    vertical-align: top;
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+}
+
+td strong {
+    color: var(--color-accent-dark);
+    font-weight: 700;
+}
+
+tr:nth-child(even) {
+    background: rgba(179, 0, 0, 0.04);
+}
+
+tr:hover {
+    background: rgba(179, 0, 0, 0.08);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* ========== FICHAS/STAT BLOCK MELHORADAS ========== */
+.stat-block {
+    margin: 3rem 0;
+    border: 2px solid var(--color-accent);
+    background: linear-gradient(145deg, #ffffff, #f8f8f8);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    color: var(--color-ink);
+}
+
+.stat-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--color-accent), 
+        transparent 30%, 
+        transparent 70%, 
+        var(--color-accent));
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.6rem 2.2rem;
+    background: linear-gradient(135deg, 
+        var(--color-accent-dark), 
+        var(--color-accent));
+    color: white;
+    position: relative;
+    z-index: 1;
+    border-bottom: 2px solid var(--color-accent-dark);
+}
+
+.stat-title h3 {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.stat-subtitle {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.9;
+    font-family: var(--font-heading);
+}
+
+.stat-challenge {
+    text-align: right;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.7rem 1.2rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 130px;
+}
+
+.challenge-label {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-family: var(--font-title);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.challenge-value {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.stat-attributes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+    padding: 1.8rem 2.2rem;
+    background: linear-gradient(to right, 
+        rgba(179, 0, 0, 0.08), 
+        rgba(179, 0, 0, 0.04), 
+        rgba(179, 0, 0, 0.08));
+    border-bottom: 1px solid rgba(179, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.stat-attribute {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    border: 1px solid rgba(179, 0, 0, 0.25);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-attribute:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-attribute-label {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: var(--color-accent-dark);
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+}
+
+.stat-attribute-value {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+.stat-abilities {
+    padding: 2rem 2.2rem;
+}
+
+.stat-ability {
+    margin-bottom: 1.8rem;
+}
+
+.stat-ability-title {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--color-accent-dark);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(179, 0, 0, 0.3);
+    padding-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: left;
+}
+
+.stat-ability-desc {
+    font-size: 1.05rem;
+    line-height: var(--line-height);
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+}
+
+/* ========== CAIXA DE TEXTO ESTILIZADA ========== */
+.text-box {
+    background: linear-gradient(145deg, #ffffff, #fcfcfc);
+    border-left: 5px solid var(--color-accent);
+    padding: 28px;
+    margin: 35px 0;
+    border-radius: 0 4px 4px 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-right: 1px solid var(--color-table-border);
+    border-top: 1px solid var(--color-table-border);
+    border-bottom: 1px solid var(--color-table-border);
+}
+
+.text-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--color-accent), 
+        transparent);
+}
+
+.text-box-title {
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    color: var(--color-accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: left;
+}
+
+.text-box-content {
+    font-size: 1.05rem;
+    line-height: var(--line-height);
+    color: var(--color-ink);
+    text-align: var(--text-justify);
+    text-justify: inter-word;
+    hyphens: var(--text-hyphens);
+    -webkit-hyphens: var(--text-hyphens);
+    -moz-hyphens: var(--text-hyphens);
+}
+
+/* ========== PÁGINAS DE TRANSIÇÃO ========== */
+.transition-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 220px 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.transition-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--color-accent-light);
+    margin-bottom: 30px;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+    padding: 18px 35px;
+    border-top: 3px solid var(--color-accent);
+    border-bottom: 3px solid var(--color-accent);
+    background: rgba(0, 0, 0, 0.75);
+    letter-spacing: 2px;
+}
+
+.transition-text {
+    font-size: 1.15rem;
+    color: #f0f0f0;
+    max-width: 550px;
+    margin: 0 auto;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-style: italic;
+    line-height: 1.8;
+}
+
+/* ========== NAVEGAÇÃO ========== */
+.book-navigation {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-btn {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--color-accent-light);
+    border: 1px solid var(--color-accent);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* ========== RESPONSIVIDADE ========== */
+@media (max-width: 1200px) {
+    .book-container {
+        max-width: 100%;
+        margin: 0;
+    }
+    
+    .presentation-text {
+        column-count: 1;
+        column-gap: 0;
+    }
+    
+    .toc-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cover-symbol {
+        width: 380px;
+        height: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: 25px 30px;
+        min-height: 100vh;
+    }
+    
+    .cover-symbol {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .toc-section {
+        height: auto;
+        min-height: 200px;
+    }
+    
+    .stat-attributes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .presentation-text {
+        padding: 20px;
+        font-size: 1rem;
+    }
+    
+    .toc-title {
+        font-size: 2.5rem;
+    }
+    
+    .book-navigation {
+        right: 10px;
+    }
+    
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+    
+    .cover-symbol {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .page {
+        padding: 20px 25px;
+    }
+    
+    .content-template {
+        padding: 22px;
+    }
+    
+    .toc-section {
+        height: auto;
+        min-height: 220px;
+    }
+    
+    .stat-attributes {
+        grid-template-columns: 1fr;
+    }
+    
+    .distorted-text {
+        font-size: 2.2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .book-navigation {
+        display: none; /* Esconde navegação em telas muito pequenas */
+    }
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--color-accent), var(--color-accent-dark));
+    border-radius: 4px;
+    border: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(var(--color-accent-light), var(--color-accent));
+}
+
+/* ========== UTILITÁRIOS ========== */
+.text-justify {
+    text-align: justify !important;
+    text-justify: inter-word !important;
+}
+
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.text-center { text-align: center; }
+.flex-grow { flex-grow: 1; }
+
+/* Efeito de página antiga */
+.page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(179, 0, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(179, 0, 0, 0.03) 0%, transparent 50%),
+        linear-gradient(180deg, transparent 95%, rgba(179, 0, 0, 0.05) 100%);
+    z-index: 1;
+}
+
+/* Animações sutis apenas para interação */
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Melhorias para impressão */
+@media print {
+    .book-navigation {
+        display: none;
+    }
+    
+    .book-container {
+        box-shadow: none;
+    }
+    
+    .page {
+        box-shadow: none;
+    }
+}
+
+/* ========== PÁGINA BIZARRA - APÓS A CAPA ========== */
+.page-bizarre {
+    background-image: url('Pagina_preta.jpg');
+    background-color: #000000;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-bizarre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.page-bizarre .page-content {
+    position: relative;
+    z-index: 3;
+    padding: 60px 50px;
+    column-count: 1 !important; /* Força texto reto */
+    
+}
+
+/* Efeito de texto escrito à mão/mancha */
+.bizarre-text {
+    font-size: 1.3rem;
+    line-height: 1.9;
+    color: #ffffff;
+    position: relative;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Container para controlar as animações das fontes */
+.font-animation-container {
+    display: inline;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* SISTEMA DE FONTES ALTERNANTES */
+.font-change-1 {
+    font-family: 'Crimson Text', serif !important;
+    font-size: 1.2rem !important;
+    color: #C4161C !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    animation: fontPulse1 7s infinite alternate;
+}
+
+.font-change-2 {
+    font-family: 'Uncial Antiqua', cursive !important;
+    font-size: 1.5rem !important;
+    color: #C4161C !important;
+    font-weight: bold !important;
+    letter-spacing: 1px !important;
+    animation: fontPulse2 9s infinite alternate;
+}
+
+.font-change-3 {
+    font-family: 'Cinzel', serif !important;
+    font-size: 1.1rem !important;
+    color: #C4161C !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    animation: fontPulse3 11s infinite alternate;
+}
+
+.font-change-4 {
+    font-family: 'Courier New', monospace !important;
+    font-size: 1.4rem !important;
+    color: #C4161C !important;
+    font-weight: bold !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 0 3px rgba(255, 0, 0, 0.5) !important;
+    animation: fontPulse4 8s infinite alternate;
+}
+
+.font-change-5 {
+    font-family: 'Times New Roman', serif !important;
+    font-size: 1.3rem !important;
+    color: #C4161C !important;
+    font-weight: normal !important;
+    text-decoration: underline !important;
+    text-decoration-color: #ff4444 !important;
+    animation: fontPulse5 10s infinite alternate;
+}
+
+.font-change-6 {
+    font-family: 'Georgia', serif !important;
+    font-size: 1.6rem !important;
+    color: #C4161C !important;
+    font-weight: bold !important;
+    font-variant: small-caps !important;
+    animation: fontPulse6 12s infinite alternate;
+}
+
+/* Animações sutis para as fontes */
+@keyframes fontPulse1 {
+    0%, 100% { opacity: 0.95; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes fontPulse2 {
+    0%, 100% { opacity: 0.9; letter-spacing: 1px; }
+    50% { opacity: 1; letter-spacing: 1.5px; }
+}
+
+@keyframes fontPulse3 {
+    0%, 100% { opacity: 0.85; transform: skewX(-1deg); }
+    50% { opacity: 1; transform: skewX(1deg); }
+}
+
+@keyframes fontPulse4 {
+    0%, 100% { opacity: 0.9; text-shadow: 0 0 3px rgba(255, 0, 0, 0.5); }
+    50% { opacity: 1; text-shadow: 0 0 5px rgba(255, 0, 0, 0.7); }
+}
+
+@keyframes fontPulse5 {
+    0%, 100% { opacity: 0.88; text-decoration-thickness: 1px; }
+    50% { opacity: 1; text-decoration-thickness: 2px; }
+}
+
+@keyframes fontPulse6 {
+    0%, 100% { opacity: 0.92; font-variant: small-caps; }
+    50% { opacity: 1; font-variant: normal; }
+}
+
+/* Efeito de texto "escrito no livro" - imperfeições */
+.bizarre-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Manchas de tinta/desgaste */
+.page-bizarre::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.03"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)"/></svg>'),
+        radial-gradient(circle at 20% 80%, rgba(179, 0, 0, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(255, 0, 0, 0.05) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+}
+
+/* Linhas de guia sutis (como papel pautado) */
+.page-bizarre .page-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 28px,
+        rgba(255, 0, 0, 0.03) 28px,
+        rgba(255, 0, 0, 0.03) 29px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Destacar palavras específicas */
+.highlight-word {
+    background-color: transparent !important;
+    position: relative;
+    display: inline-block;
+}
+
+.highlight-word::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff4444, transparent);
+    animation: linePulse 4s infinite;
+}
+
+@keyframes linePulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}

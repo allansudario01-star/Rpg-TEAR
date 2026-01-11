@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T.E.A.R. - Livro de Regras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:wght@400;600;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylelivro.css">
+</head>
+<body>
+    <!-- Navegação -->
+    <div class="book-navigation">
+        <button class="nav-btn" onclick="scrollToSection('cover')" title="Capa">
+            <i class="fas fa-book"></i>
+        </button>
+        <button class="nav-btn" onclick="scrollToSection('toc')" title="Sumário">
+            <i class="fas fa-list"></i>
+        </button>
+        <button class="nav-btn" onclick="scrollToSection('intro')" title="Introdução">
+            <i class="fas fa-play"></i>
+        </button>
+        <button class="nav-btn" onclick="scrollToTop()" title="Topo">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="nav-btn" onclick="scrollToBottom()" title="Final">
+            <i class="fas fa-arrow-down"></i>
+        </button>
+    </div>
+
+    <div class="book-container">
+        <!-- CAPA -->
+        <div id="cover" class="page page-cover">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                    <div class="cover-symbol"></div>
+            </div>
+        </div>
+
+      <!-- Logo após a capa -->
+    <div class="page page-bizarre">
+        <div class="page-content">
+            <div class="bizarre-text">
+                <span class="font-change-4">Nada</span>
+                <span class="font-change-1"> existe</span>
+                <span class="font-change-2"> sem</span>
+                <span class="font-change-6"> fios.</span>
+                <br>
+                <span class="font-change-3">Nada</span>
+                <span class="font-change-5"> vive</span>
+                <span class="font-change-1"> sem</span>
+                <span class="font-change-2"> estar</span>
+                <span class="font-change-4"> entrelaçado.</span>
+                <br><br>
+                
+                <span class="font-change-6">O</span>
+                <span class="font-change-2"> mundo</span>
+                <span class="font-change-1"> não</span>
+                <span class="font-change-3"> é</span>
+                <span class="font-change-5"> feito</span>
+                <span class="font-change-4"> de</span>
+                <span class="font-change-2"> matéria,</span>
+                <span class="font-change-1"> mas</span>
+                <span class="font-change-6"> de</span>
+                <span class="font-change-3"> tensão.</span>
+                <br>
+                <span class="font-change-5">De</span>
+                <span class="font-change-4"> linhas</span>
+                <span class="font-change-2"> invisíveis</span>
+                <span class="font-change-1"> que</span>
+                <span class="font-change-6"> sustentam</span>
+                <span class="font-change-3"> corpos,</span>
+                <span class="font-change-5"> vontades,</span>
+                <span class="font-change-4"> destinos</span>
+                <span class="font-change-2"> e</span>
+                <span class="font-change-1"> ideias.</span>
+                <br>
+                <span class="font-change-6">Aqueles</span>
+                <span class="font-change-3"> que</span>
+                <span class="font-change-5"> não</span>
+                <span class="font-change-4"> as</span>
+                <span class="font-change-2"> veem</span>
+                <span class="font-change-1"> caminham</span>
+                <span class="font-change-6"> às</span>
+                <span class="font-change-3"> cegas</span>
+                <span class="font-change-5">—</span>
+                <br>
+                <span class="font-change-4">vivem,</span>
+                <span class="font-change-2"> morrem</span>
+                <span class="font-change-1"> e</span>
+                <span class="font-change-6"> nunca</span>
+                <span class="font-change-3"> sabem</span>
+                <span class="font-change-5"> por</span>
+                <span class="font-change-4"> quê.</span>
+                <br><br>
+                
+                <span class="font-change-1">Este</span>
+                <span class="font-change-2"> livro</span>
+                <span class="font-change-3"> não</span>
+                <span class="font-change-4"> fala</span>
+                <span class="font-change-5"> de</span>
+                <span class="font-change-6"> heróis.</span>
+                <br>
+                <span class="font-change-2">Fala</span>
+                <span class="font-change-4"> de</span>
+                <span class="font-change-6 highlight-word">Tecelões.</span>
+                <br><br>
+                
+                <span class="font-change-3">Seres</span>
+                <span class="font-change-1"> capazes</span>
+                <span class="font-change-5"> de</span>
+                <span class="font-change-2"> enxergar</span>
+                <span class="font-change-4"> o</span>
+                <span class="font-change-6"> Tecido</span>
+                <span class="font-change-3"> por</span>
+                <span class="font-change-1"> trás</span>
+                <span class="font-change-5"> da</span>
+                <span class="font-change-2"> realidade</span>
+                <br>
+                <span class="font-change-4">e</span>
+                <span class="font-change-6"> de</span>
+                <span class="font-change-3"> tocá-lo</span>
+                <span class="font-change-1"> com</span>
+                <span class="font-change-5"> as</span>
+                <span class="font-change-2"> próprias</span>
+                <span class="font-change-4"> mãos,</span>
+                <br>
+                <span class="font-change-6">esticando,</span>
+                <span class="font-change-3"> reforçando,</span>
+                <span class="font-change-1"> rompendo</span>
+                <span class="font-change-5"> ou</span>
+                <span class="font-change-2"> reconstruindo</span>
+                <span class="font-change-4"> os</span>
+                <span class="font-change-6"> fios</span>
+                <span class="font-change-3"> que</span>
+                <span class="font-change-1"> definem</span>
+                <span class="font-change-5"> a</span>
+                <span class="font-change-2"> existência.</span>
+                <br><br>
+                
+                <span class="font-change-4">Aqui</span>
+                <span class="font-change-2"> estão</span>
+                <span class="font-change-6"> registradas</span>
+                <span class="font-change-3"> as</span>
+                <span class="font-change-1"> leis</span>
+                <span class="font-change-5"> do</span>
+                <span class="font-change-2 highlight-word">Tear:</span>
+                <br>
+                <span class="font-change-4">os</span>
+                <span class="font-change-6"> limites</span>
+                <span class="font-change-3"> do</span>
+                <span class="font-change-1"> poder,</span>
+                <br>
+                <span class="font-change-5">o</span>
+                <span class="font-change-2"> preço</span>
+                <span class="font-change-4"> da</span>
+                <span class="font-change-6"> Afinação,</span>
+                <br>
+                <span class="font-change-3">o</span>
+                <span class="font-change-1"> risco</span>
+                <span class="font-change-5"> da</span>
+                <span class="font-change-2"> Tensão,</span>
+                <br>
+                <span class="font-change-4">e</span>
+                <span class="font-change-6"> as</span>
+                <span class="font-change-3"> cicatrizes</span>
+                <span class="font-change-1"> deixadas</span>
+                <span class="font-change-5"> quando</span>
+                <span class="font-change-2"> um</span>
+                <span class="font-change-4"> fio</span>
+                <span class="font-change-6"> se</span>
+                <span class="font-change-3"> rompe</span>
+                <span class="font-change-1"> para</span>
+                <span class="font-change-5"> sempre.</span>
+                <br><br>
+                
+                <span class="font-change-2">Cada</span>
+                <span class="font-change-4"> escolha</span>
+                <span class="font-change-6"> puxa</span>
+                <span class="font-change-3"> uma</span>
+                <span class="font-change-1"> linha.</span>
+                <br>
+                <span class="font-change-5">Cada</span>
+                <span class="font-change-2"> ação</span>
+                <span class="font-change-4"> gera</span>
+                <span class="font-change-6"> tensão.</span>
+                <br>
+                <span class="font-change-3">E</span>
+                <span class="font-change-1"> todo</span>
+                <span class="font-change-5"> excesso</span>
+                <span class="font-change-2"> cobra</span>
+                <span class="font-change-4"> seu</span>
+                <span class="font-change-6"> preço.</span>
+                <br><br>
+                
+                <span class="font-change-3">Este</span>
+                <span class="font-change-1"> não</span>
+                <span class="font-change-5"> é</span>
+                <span class="font-change-2"> um</span>
+                <span class="font-change-4"> manual</span>
+                <span class="font-change-6"> sobre</span>
+                <span class="font-change-3"> vencer.</span>
+                <br>
+                <span class="font-change-1">É</span>
+                <span class="font-change-5"> um</span>
+                <span class="font-change-2"> tratado</span>
+                <span class="font-change-4"> sobre</span>
+                <span class="font-change-6"> até</span>
+                <span class="font-change-3"> onde</span>
+                <span class="font-change-1"> você</span>
+                <span class="font-change-5"> ousa</span>
+                <span class="font-change-2"> tecer</span>
+                <br>
+                <span class="font-change-4">antes</span>
+                <span class="font-change-6"> que</span>
+                <span class="font-change-3"> o</span>
+                <span class="font-change-1"> próprio</span>
+                <span class="font-change-5"> Tear</span>
+                <span class="font-change-2"> decida</span>
+                <span class="font-change-4"> desfazer</span>
+                <span class="font-change-6"> você.</span>
+                <br><br>
+                
+                <span class="font-change-1">Abra</span>
+                <span class="font-change-2"> este</span>
+                <span class="font-change-3"> livro</span>
+                <span class="font-change-4"> com</span>
+                <span class="font-change-5"> cuidado.</span>
+                <br>
+                <span class="font-change-6 highlight-word">O</span>
+                <span class="font-change-2"> Tecido</span>
+                <span class="font-change-4"> observa.</span>
+            </div>
+        </div>
+    </div>
+
+        <!-- SUMÁRIO -->
+    <div class="page page-toc">
+    <div class="page-content">
+        <div class="toc-header">
+            <h1 class="toc-title"><strong>Sumário</strong></h1>
+        </div>
+        
+        <div class="toc-container">
+            <!-- Coluna 1 -->
+            <div class="toc-column">
+                <!-- Introdução -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number"></span>
+                        Introdução
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#mecanica-basica">Mecânica Básica</a></li>
+                        <li class="toc-item"><a href="#termos-importantes">Termos Importantes</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Criação de Personagem -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">1.</span>
+                        Criação de Personagem
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#atributos">Atributos</a></li>
+                        <li class="toc-item"><a href="#antecedentes">Antecedentes</a></li>
+                        <li class="toc-item"><a href="#profissoes">Profissões</a>
+                            <ul class="toc-subitems">
+                                <li class="toc-subitem"><a href="#classe1">Classe 1</a></li>
+                                <li class="toc-subitem"><a href="#classe2">Classe 2</a></li>
+                                <li class="toc-subitem"><a href="#classe3">Classe 3</a></li>
+                                <li class="toc-subitem"><a href="#classe4">Classe 4</a></li>
+                                <li class="toc-subitem"><a href="#classe5">Classe 5</a></li>
+                            </ul>
+                        </li>
+                        <li class="toc-item"><a href="#peculiaridades">Peculiaridades</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Equipamentos -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">2.</span>
+                        Equipamentos
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#capacidade-carga">Capacidade de Carga</a></li>
+                        <li class="toc-item"><a href="#armas">Armas</a></li>
+                        <li class="toc-item"><a href="#protecoes">Proteções</a></li>
+                        <li class="toc-item"><a href="#geral">Geral</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Regras -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">3.</span>
+                        Regras
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#testes-habilidades">Testes & Habilidades</a></li>
+                        <li class="toc-item"><a href="#combate">Combate</a></li>
+                        <li class="toc-item"><a href="#interludio">Interlúdio</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Coluna 2 -->
+            <div class="toc-column">
+                <!-- O Tecido -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">4.</span>
+                        O Tecido
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                    </ul>
+                </div>
+                
+                <!-- O Mestre -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">5.</span>
+                        O Mestre
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#tabelas-gerais">Tabelas Gerais</a></li>
+                        <li class="toc-item"><a href="#sessoes">Sessões</a></li>
+                        <li class="toc-item"><a href="#situacoes">Situações</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Ameaças -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">6.</span>
+                        Ameaças
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                    </ul>
+                </div>
+                
+                <!-- O Mundo -->
+                <div class="toc-section">
+                    <h2 class="toc-section-title">
+                        <span class="toc-chapter-number">7.</span>
+                        O Mundo
+                    </h2>
+                    <ul class="toc-list">
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                        <li class="toc-item"><span class="toc-placeholder">[conteúdo a ser adicionado]</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rodapé discreto -->
+        <div style="text-align: center; margin-top: 60px; font-style: italic; color: #666666; font-size: 0.9rem; border-top: 1px solid rgba(26, 26, 26, 0.1); padding-top: 20px;">
+            <p>Cada fio uma história.</p>
+        </div>
+    </div>
+</div>
+
+
+        <div class="page page-transition">
+            <div class="page-overlay"></div>
+            <div class="page-content"></div>
+        </div>
+
+        <!-- SEÇÃO 1: INTRODUÇÃO -->
+        <div id="intro" class="page page-white">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h1 class="section-title">Introdução</h1>
+                        <p class="section-subtitle">O Tecido e os Tecelões</p>
+                        <div class="section-icon">
+                            <i class="fas fa-dice-d20"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">O que é T.E.A.R.?</h2>
+                        <p class="template-content">
+                            T.E.A.R. (Tecer, Ecoar, Afinar, Remendar) é um sistema de RPG de mesa que se passa em um universo de dark fantasy onde a realidade é sustentada por um Tecido invisível de fios conectando todas as coisas. Os jogadores assumem o papel de Tecelões — indivíduos capazes de perceber e manipular esses fios.
+                        </p>
+                    </div>
+                    
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">Conceitos Fundamentais</h2>
+                        <div class="template-content">
+                            <h3>O Tecido</h3>
+                            <p>A rede invisível que conecta todas as coisas. Cada objeto, ser vivo, emoção e conceito existe como um nó neste Tecido.</p>
+                            
+                            <h3>O Tear</h3>
+                            <p>A fonte primária de poder, uma máquina cósmica que constantemente tece e destece a realidade.</p>
+                            
+                            <h3>Fios</h3>
+                            <p>As linhas individuais que compõem o Tecido. Podem ser reforçados, rompidos, esticados ou manipulados.</p>
+                            
+                            <h3>Ecos de Fios</h3>
+                            <p>A energia vital dos Tecelões, usada para manipular o Tecido. Representa sua conexão com o Tear.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-box fade-in">
+                        <h3 class="text-box-title"><i class="fas fa-exclamation-triangle"></i> Aviso aos Tecelões</h3>
+                        <div class="text-box-content">
+                            Cada manipulação do Tecido gera Tensão. Excesso de Tensão pode romper fios, causando efeitos catastróficos no Tecelão e na realidade ao seu redor. A Afinação é necessária para liberar Tensão, mas traz seus próprios riscos. O equilíbrio é tudo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE TRANSIÇÃO -->
+        <div class="page page-transition">
+            <div class="page-overlay"></div>
+            <div class="page-content"></div>
+        </div>  
+
+        <!-- SEÇÃO 2: CRIAÇÃO DE PERSONAGEM -->
+        <div id="character-creation" class="page page-white">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h1 class="section-title">Criação de Personagem</h1>
+                        <p class="section-subtitle">Do zero ao Tecelão</p>
+                        <div class="section-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Template: Atributos -->
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">Atributos Principais</h2>
+                        <p class="template-subtitle">Os pilares do seu Tecelão</p>
+                        
+                        <div class="rpg-table">
+                            <div class="table-header">
+                                <div class="table-title">
+                                    <h3>Atributos Principais</h3>
+                                    <p>Valores de 1 a 50</p>
+                                </div>
+                                <div class="table-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Atributo</th>
+                                        <th>Descrição</th>
+                                        <th>Afeta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FORÇA (FOR)</strong></td>
+                                        <td>Poder físico, capacidade de carga</td>
+                                        <td>Vida, Dano Físico</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CONSTITUIÇÃO (CON)</strong></td>
+                                        <td>Resistência física, saúde</td>
+                                        <td>Vida Máxima, Resistência</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>DESTREZA (DES)</strong></td>
+                                        <td>Agilidade, coordenação</td>
+                                        <td>Defesa, Iniciativa</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Template: Sub-atributos Linecinese -->
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">Sub-atributos Linecinese</h2>
+                        <p class="template-subtitle">Especialização em manipulação do Tecido</p>
+                        
+                        <div class="rpg-table">
+                            <div class="table-header">
+                                <div class="table-title">
+                                    <h3>Sub-atributos LIN</h3>
+                                    <p>Distribua pontos igual a seu LIN</p>
+                                </div>
+                                <div class="table-icon">
+                                    <i class="fas fa-network-wired"></i>
+                                </div>
+                            </div>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Sub-atributo</th>
+                                        <th>Descrição</th>
+                                        <th>Grau I</th>
+                                        <th>Grau V</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Manipulação</strong></td>
+                                        <td>Controlar fios existentes</td>
+                                        <td>Mover objetos pequenos</td>
+                                        <td>Controlar mentes</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Reforço</strong></td>
+                                        <td>Fortificar fios existentes</td>
+                                        <td>+5 em um atributo</td>
+                                        <td>Imortalidade temporária</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE TRANSIÇÃO -->
+        <div class="page page-transition">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div class="transition-content">
+                    <h2 class="transition-title">✦ As Regras do Tecido ✦</h2>
+                    <p class="transition-text">
+                        Conheça as leis que regem sua interação com a realidade.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO 3: EQUIPAMENTOS -->
+        <div id="equipment" class="page page-white">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h1 class="section-title">Equipamentos</h1>
+                        <p class="section-subtitle">Ferramentas da Tecelagem</p>
+                        <div class="section-icon">
+                            <i class="fas fa-backpack"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">Capacidade de Carga</h2>
+                        <div class="template-content">
+                            <p>Sua capacidade de carga é determinada por sua Força:</p>
+                            <ul>
+                                <li><strong>Capacidade Máxima:</strong> FORÇA × 1.5 slots</li>
+                                <li><strong>Sobrepeso:</strong> Penalidade de -15 em testes físicos</li>
+                                <li><strong>Itens pequenos:</strong> 0.5 slot</li>
+                                <li><strong>Itens médios:</strong> 1 slot</li>
+                                <li><strong>Itens grandes:</strong> 2 slots</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Template: Armas -->
+                    <div class="content-template fade-in">
+                        <h2 class="template-title">Armas</h2>
+                        <p class="template-subtitle">Instrumentos de rompimento</p>
+                        
+                        <div class="rpg-table">
+                            <div class="table-header">
+                                <div class="table-title">
+                                    <h3>Tabela de Armas</h3>
+                                    <p>Dano base + modificadores</p>
+                                </div>
+                                <div class="table-icon">
+                                    <i class="fas fa-gavel"></i>
+                                </div>
+                            </div>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Arma</th>
+                                        <th>Dano</th>
+                                        <th>Slots</th>
+                                        <th>Atributo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Adaga</strong></td>
+                                        <td>1d4 + DES</td>
+                                        <td>0.5</td>
+                                        <td>DES</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Espada Curta</strong></td>
+                                        <td>1d6 + DES</td>
+                                        <td>1</td>
+                                        <td>DES ou FOR</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Machado de Batalha</strong></td>
+                                        <td>1d8 + FOR</td>
+                                        <td>1.5</td>
+                                        <td>FOR</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA DE TRANSIÇÃO -->
+        <div class="page page-transition">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div class="transition-content">
+                    <h2 class="transition-title">✦ Fim do Livro ✦</h2>
+                    <p class="transition-text">
+                        Que sua tecelagem seja sempre equilibrada e seus fios nunca se rompam.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA FINAL -->
+        <div class="page page-black">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div style="text-align: center; padding: 150px 20px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h2 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--color-accent); margin-bottom: 30px;">
+                        ✦ O Fim é Apenas Outro Começo ✦
+                    </h2>
+                    
+                    <p style="font-size: 1.2rem; color: #e8e0c9; max-width: 500px; margin-bottom: 40px; text-align: center; line-height: 1.8;">
+                        Você chegou ao fim deste livro, mas sua jornada como Tecelão está apenas começando. Lembre-se: cada fio que você toca, cada nó que você desfaz, cada linha que você tece - tudo ecoa através do Tecido.
+                    </p>
+                    
+                    <div style="border-top: 2px solid var(--color-accent); padding-top: 20px; width: 250px;">
+                        <p style="font-family: var(--font-title); color: var(--color-accent-light); font-size: 1rem;">
+                            T.E.A.R. - Sistema de RPG<br>
+                            Criado por [Seu Nome]<br>
+                            Versão 1.0
+                        </p>
+                    </div>
+                    
+                    <div style="margin-top: 30px; font-size: 0.85rem; color: rgba(232, 224, 201, 0.7);">
+                        <p>"Que seus fios estejam sempre tensionados, mas nunca rompidos."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CAPA TRASEIRA -->
+        <div class="page page-cover">
+            <div class="page-overlay"></div>
+            <div class="page-content">
+                <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                    <div style="text-align: center;">
+                        <div style="font-family: var(--font-heading); font-size: 2.5rem; color: var(--color-accent-light); margin-bottom: 15px; transform: rotate(180deg); text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);">
+                            T.E.A.R.
+                        </div>
+                        <div style="width: 150px; height: 2px; background: var(--color-accent); margin: 0 auto 20px;"></div>
+                        <p style="color: rgba(232, 224, 201, 0.8); font-size: 0.85rem;">
+                            Fim do Livro de Regras<br>
+                            Tecer • Ecoar • Afinar • Remendar
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções de navegação
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+        
+        // Adiciona animação de entrada às seções
+        document.addEventListener('DOMContentLoaded', function() {
+            // Observador para animações de entrada
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observa todos os elementos com classe de template
+            document.querySelectorAll('.content-template, .stat-block, .text-box').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Adiciona funcionalidade aos itens do sumário
+            document.querySelectorAll('.toc-section').forEach(section => {
+                section.addEventListener('click', function() {
+                    const targetId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    scrollToSection(targetId);
+                });
+            });
+        });
+        
+        // Efeito de digitação na página de apresentação
+        window.addEventListener('load', function() {
+            const distortedText = document.querySelector('.distorted-text');
+            if (distortedText) {
+                const originalText = distortedText.textContent;
+                distortedText.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < originalText.length) {
+                        distortedText.textContent += originalText.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 60);
+                    }
+                };
+                
+                // Inicia após um breve delay
+                setTimeout(typeWriter, 800);
+            }
+        });
+    </script>
+</body>
+</html>
