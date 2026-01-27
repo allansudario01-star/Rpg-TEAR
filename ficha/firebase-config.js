@@ -16,4 +16,3 @@ const app = firebase.initializeApp(firebaseConfig);
 // Exportar instâncias para uso global (compatibilidade)
 window.auth = firebase.auth();
 window.db = firebase.firestore();
-

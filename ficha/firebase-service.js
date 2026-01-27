@@ -5,26 +5,26 @@ const FirebaseService = {
     auth: null,
     db: null,
     currentUser: null,
-    
+
     // Inicializar
     init() {
         this.auth = firebase.auth();
         this.db = firebase.firestore();
-        
+
         // Configurar persistência
         this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        
+
     },
-    
+
     // ========== AUTENTICAÇÃO ==========
-    
+
     onAuthStateChanged(callback) {
         return this.auth.onAuthStateChanged((user) => {
             this.currentUser = user;
             callback(user);
         });
     },
-    
+
     async login(email, password) {
         try {
             const result = await this.auth.signInWithEmailAndPassword(email, password);
@@ -33,7 +33,7 @@ const FirebaseService = {
             return { success: false, error: error.message };
         }
     },
-    
+
     async register(email, password) {
         try {
             const result = await this.auth.createUserWithEmailAndPassword(email, password);
@@ -42,7 +42,7 @@ const FirebaseService = {
             return { success: false, error: error.message };
         }
     },
-    
+
     // async loginWithGoogle() {
     //     try {
     //         const provider = new firebase.auth.GoogleAuthProvider();
@@ -52,7 +52,7 @@ const FirebaseService = {
     //         return { success: false, error: error.message };
     //     }
     // },
-    
+
     async logout() {
         try {
             await this.auth.signOut();
@@ -61,25 +61,25 @@ const FirebaseService = {
             return { success: false, error: error.message };
         }
     },
-    
+
     isAuthenticated() {
         return this.currentUser !== null;
     },
-    
+
     getCurrentUserId() {
         return this.currentUser ? this.currentUser.uid : null;
     },
-    
+
     // ========== FIRESTORE ==========
-    
+
     async saveFicha(fichaData, characterId = null) {
         if (!this.currentUser) {
             return { success: false, error: "Usuário não autenticado" };
         }
-        
+
         try {
             const userId = this.currentUser.uid;
-            
+
             // Preparar dados com metadados
             const fichaToSave = {
                 ...fichaData,
@@ -87,9 +87,9 @@ const FirebaseService = {
                 characterName: fichaData.characterName || 'Sem nome',
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
+
             let fichaRef;
-            
+
             if (characterId) {
                 // Atualizar ficha existente
                 fichaRef = this.db.collection('users').doc(userId).collection('fichas').doc(characterId);
@@ -100,9 +100,9 @@ const FirebaseService = {
                 fichaToSave.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                 await fichaRef.set(fichaToSave);
             }
-            
-            return { 
-                success: true, 
+
+            return {
+                success: true,
                 characterId: fichaRef.id,
                 data: fichaToSave
             };
@@ -110,16 +110,16 @@ const FirebaseService = {
             return { success: false, error: error.message };
         }
     },
-    
+
     async loadFicha(characterId) {
         if (!this.currentUser) {
             return { success: false, error: "Usuário não autenticado" };
         }
-        
+
         try {
             const userId = this.currentUser.uid;
             const doc = await this.db.collection('users').doc(userId).collection('fichas').doc(characterId).get();
-            
+
             if (doc.exists) {
                 return { success: true, data: doc.data(), id: doc.id };
             } else {
@@ -129,16 +129,16 @@ const FirebaseService = {
             return { success: false, error: error.message };
         }
     },
-    
+
     async loadAllFichas() {
         if (!this.currentUser) {
             return { success: false, error: "Usuário não autenticado" };
         }
-        
+
         try {
             const userId = this.currentUser.uid;
             const snapshot = await this.db.collection('users').doc(userId).collection('fichas').get();
-            
+
             const fichas = [];
             snapshot.forEach(doc => {
                 fichas.push({
@@ -146,18 +146,18 @@ const FirebaseService = {
                     ...doc.data()
                 });
             });
-            
+
             return { success: true, fichas };
         } catch (error) {
             return { success: false, error: error.message };
         }
     },
-    
+
     async deleteFicha(characterId) {
         if (!this.currentUser) {
             return { success: false, error: "Usuário não autenticado" };
         }
-        
+
         try {
             const userId = this.currentUser.uid;
             await this.db.collection('users').doc(userId).collection('fichas').doc(characterId).delete();
